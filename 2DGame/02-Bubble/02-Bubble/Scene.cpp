@@ -50,6 +50,15 @@ void Scene::render()
 	glm::mat4 modelview;
 
 	texProgram.use();
+	//++
+	float cameraX = 0;
+	float x = float(player->getPositionX());
+	if (x < (SCREEN_WIDTH) / 2) cameraX = 0;
+	else cameraX = x - (SCREEN_WIDTH) / 2;
+
+	projection = glm::ortho(cameraX, cameraX + float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+
+	//+++
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);

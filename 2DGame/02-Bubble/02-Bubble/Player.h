@@ -20,7 +20,8 @@ public:
 	
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
-	
+	int getPositionX();
+
 private:
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer;
