@@ -11,7 +11,6 @@
 #define INIT_PLAYER_X_TILES 3
 #define INIT_PLAYER_Y_TILES 3
 
-
 Scene::Scene()
 {
 	map = NULL;
@@ -37,12 +36,16 @@ void Scene::init()
 	player->setTileMap(map);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
+	// --
+	cameraX = 0.0f;
 }
 
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	// --
+	updateCamera(deltaTime);
 }
 
 void Scene::render()
@@ -50,12 +53,6 @@ void Scene::render()
 	glm::mat4 modelview;
 
 	texProgram.use();
-	//++
-	float cameraX = 0;
-	float x = float(player->getPositionX());
-	if (x < (SCREEN_WIDTH) / 2) cameraX = 0;
-	else cameraX = x - (SCREEN_WIDTH) / 2;
-
 	projection = glm::ortho(cameraX, cameraX + float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 
 	//+++
@@ -98,5 +95,17 @@ void Scene::initShaders()
 	fShader.free();
 }
 
-
-
+// --
+void Scene::updateCamera(int deltaTime)
+{
+	float playerX = float(player->getPositionX());
+	if (playerX < SCREEN_WIDTH / 5)
+		cameraX = 0;
+	else if (playerX < map->getMapWidth() - 3*SCREEN_WIDTH / 5)
+	{
+		if (playerX - cameraX < SCREEN_WIDTH / 5)
+			cameraX = playerX - SCREEN_WIDTH / 5;
+		if (playerX - cameraX > 2 * SCREEN_WIDTH / 5)
+			cameraX = playerX - 2 * SCREEN_WIDTH / 5;
+	}
+}

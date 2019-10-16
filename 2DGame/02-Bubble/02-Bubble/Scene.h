@@ -25,6 +25,7 @@ public:
 
 private:
 	void initShaders();
+	void updateCamera(int deltaTime);
 
 private:
 	TileMap *map;
@@ -32,6 +33,9 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
+
+	// --
+	float cameraX;
 
 };
 
