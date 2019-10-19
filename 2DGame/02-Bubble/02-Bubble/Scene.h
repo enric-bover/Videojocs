@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "Goomba.h"
 
 
 // Scene contains all the entities of our game.
@@ -30,7 +31,9 @@ private:
 private:
 	TileMap *map;
 	Player *player;
+	Goomba* goomba;
 	ShaderProgram texProgram;
+	glm::ivec2 goombaEnemies[20];
 	float currentTime;
 	glm::mat4 projection;
 
