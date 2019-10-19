@@ -31,9 +31,9 @@ private:
 private:
 	TileMap *map;
 	Player *player;
-	Goomba* goomba;
+	Goomba *goomba[20];
 	ShaderProgram texProgram;
-	glm::ivec2 goombaEnemies[20];
+
 	float currentTime;
 	glm::mat4 projection;
 
