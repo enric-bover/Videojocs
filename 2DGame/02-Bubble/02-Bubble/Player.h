@@ -27,7 +27,9 @@ private:
 	glm::ivec2 tileMapDispl, posPlayer;
 	int jumpAngle, startY;
 	Texture spritesheet;
+	Texture spritesheet2;
 	Sprite *sprite;
+	Sprite *sprite2;
 	TileMap *map;
 
 };
