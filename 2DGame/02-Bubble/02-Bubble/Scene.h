@@ -33,7 +33,7 @@ private:
 	Player *player;
 	Goomba *goomba[20];
 	ShaderProgram texProgram;
-
+	bool first;
 	float currentTime;
 	glm::mat4 projection;
 

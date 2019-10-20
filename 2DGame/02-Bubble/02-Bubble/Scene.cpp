@@ -18,6 +18,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	first = true;
 }
 
 Scene::~Scene()
@@ -31,19 +32,24 @@ Scene::~Scene()
 // --
 void Scene::init()
 {
-	initShaders();
-	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(CAMERA_X, CAMERA_Y), texProgram);
-	player = new Player();
-	player->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
-	player->setPosition(glm::vec2(62 * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
-
-	for (int i = 0; i < NUMBER_OF_GOOMBAS; i++)
+	if (first) 
 	{
-		goomba[i] = new Goomba();
-		goomba[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
-		goomba[i]->setTileMap(map);
+		first = false;
+		initShaders();
+		map = TileMap::createTileMap("levels/level02.txt", glm::vec2(CAMERA_X, CAMERA_Y), texProgram);
+		player = new Player();
+		player->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+		for (int i = 0; i < NUMBER_OF_GOOMBAS; i++)
+		{
+			goomba[i] = new Goomba();
+			goomba[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+			goomba[i]->setTileMap(map);
+		}
+		player->setTileMap(map);
 	}
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+
+	
 	//FICAR LES COORDENADES INICALS DELS GOOMBAS EN ALGUN ARXIU EXTERN
 	goomba[0]->setPosition(glm::vec2((6) * map->getTileSize(), 1 * map->getTileSize()));
 	goomba[1]->setPosition(glm::vec2((8) * map->getTileSize(), 8 * map->getTileSize()));
@@ -78,12 +84,16 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	//for (int i = 0; i < 20; i++) {
-		if (goomba[19]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
-			goomba[19]->update(deltaTime);
-			player->dies(glm::ivec2(goomba[19]->getPositionX(), goomba[19]->getPositionY()), goomba[19]->getSpriteSize());
+	for (int i = 0; i < 20; i++) {
+		if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
+			goomba[i]->update(deltaTime);
+			if (player->dies(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
+			{
+				this->init();
+			}
 		}
-	//}
+
+	}
 
 	// --
 	updateCamera(deltaTime);
@@ -104,12 +114,12 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
-	//for (int i = 0; i < 20; i++)
-	//{
-		if (goomba[19]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
-			goomba[19]->render();
+	for (int i = 0; i < 20; i++)
+	{
+		if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
+			goomba[i]->render();
 		}
-	//}
+	}
 }
 
 void Scene::initShaders()

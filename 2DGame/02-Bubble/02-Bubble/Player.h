@@ -22,7 +22,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	int getPositionX();
 	int getPositionY();
-	void dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
+	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 
 private:
 	bool bJumping;
