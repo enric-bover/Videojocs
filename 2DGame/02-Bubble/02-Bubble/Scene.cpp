@@ -81,7 +81,7 @@ void Scene::update(int deltaTime)
 	//for (int i = 0; i < 20; i++) {
 		if (goomba[19]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
 			goomba[19]->update(deltaTime);
-			player->dead(glm::ivec2(goomba[19]->getPositionX(), goomba[19]->getPositionY()), goomba[19]->getSpriteSize());
+			player->dies(glm::ivec2(goomba[19]->getPositionX(), goomba[19]->getPositionY()), goomba[19]->getSpriteSize());
 		}
 	//}
 

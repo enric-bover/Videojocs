@@ -22,7 +22,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	int getPositionX();
 	int getPositionY();
-	void dead(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
+	void dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 
 private:
 	bool bJumping;
@@ -33,6 +33,7 @@ private:
 	Sprite *sprite;
 	Sprite *sprite2;
 	TileMap *map;
+	bool dead;
 
 };
 

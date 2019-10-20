@@ -21,6 +21,7 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
+	dead = false;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteSize = glm::ivec2(20, 35);
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1, 0.5), &spritesheet, &shaderProgram);
@@ -69,53 +70,53 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-
-	if (!bJumping) {
-		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-		{
-			if (sprite->animation() != MOVE_LEFT)
-				sprite->changeAnimation(MOVE_LEFT);
-			posPlayer.x -= int(SPEED * deltaTime);
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
+	if (!dead) {
+		if (!bJumping) {
+			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 			{
-				posPlayer.x += int(SPEED * deltaTime);
-				sprite->changeAnimation(STAND_LEFT);
-			}
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-		{
-			if (sprite->animation() != MOVE_RIGHT)
-				sprite->changeAnimation(MOVE_RIGHT);
-			posPlayer.x += int(SPEED * deltaTime);
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
-			{
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
 				posPlayer.x -= int(SPEED * deltaTime);
-				sprite->changeAnimation(STAND_RIGHT);
+				if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x += int(SPEED * deltaTime);
+					sprite->changeAnimation(STAND_LEFT);
+				}
+			}
+			else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+			{
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				posPlayer.x += int(SPEED * deltaTime);
+				if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x -= int(SPEED * deltaTime);
+					sprite->changeAnimation(STAND_RIGHT);
+				}
+			}
+			else
+			{
+				if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT)
+					sprite->changeAnimation(STAND_LEFT);
+				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT)
+					sprite->changeAnimation(STAND_RIGHT);
 			}
 		}
-		else
-		{
-			if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT)
-				sprite->changeAnimation(STAND_LEFT);
-			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT)
-				sprite->changeAnimation(STAND_RIGHT);
-		}
-	}
-	
-	if(bJumping)
-	{
 
-		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
+		if (bJumping)
 		{
-			sprite->changeAnimation(JUMP_LEFT);
 
-		}
-		else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
-		{
-			sprite->changeAnimation(JUMP_RIGHT);
-		}
-		else if (sprite->animation() == JUMP_RIGHT)
-		{
+			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
+			{
+				sprite->changeAnimation(JUMP_LEFT);
+
+			}
+			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+			{
+				sprite->changeAnimation(JUMP_RIGHT);
+			}
+			else if (sprite->animation() == JUMP_RIGHT)
+			{
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 			{
 				posPlayer.x += int(SPEED * deltaTime);
@@ -129,9 +130,9 @@ void Player::update(int deltaTime)
 				sprite->changeAnimation(JUMP_LEFT);
 				posPlayer.x -= int(SPEED * deltaTime);
 			}
-		}
-		else if (sprite->animation() == JUMP_LEFT)
-		{
+			}
+			else if (sprite->animation() == JUMP_LEFT)
+			{
 			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 			{
 				posPlayer.x -= int(SPEED * deltaTime);
@@ -145,35 +146,35 @@ void Player::update(int deltaTime)
 				sprite->changeAnimation(JUMP_RIGHT);
 				posPlayer.x += int(SPEED * deltaTime);
 			}
-		}
+			}
 
-		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180)
-		{
-			bJumping = false;
-			posPlayer.y = startY;
+			jumpAngle += JUMP_ANGLE_STEP;
+			if (jumpAngle == 180)
+			{
+				bJumping = false;
+				posPlayer.y = startY;
+			}
+			else
+			{
+				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+				if (jumpAngle > 90)
+					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(20, 35), &posPlayer.y);
+			}
 		}
 		else
 		{
-			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(20, 35), &posPlayer.y);
-		}
-	}
-	else
-	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(20, 35), &posPlayer.y))
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(20, 35), &posPlayer.y))
 		{
-			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
 				bJumping = true;
 				jumpAngle = 0;
 				startY = posPlayer.y;
 			}
 		}
+		}
 	}
-	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
@@ -182,12 +183,12 @@ void Player::render()
 	sprite->render();
 }
 
-void Player::setTileMap(TileMap *tileMap)
+void Player::setTileMap(TileMap* tileMap)
 {
 	map = tileMap;
 }
 
-void Player::setPosition(const glm::vec2 &pos)
+void Player::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -203,7 +204,21 @@ int Player::getPositionY()
 	return posPlayer.y;
 }
 
-void Player::dead(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
+void Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 {
+	int xEnemie1, xEnemie2, yEnemie1, yEnemie2;
+	xEnemie1 = posEnemie.x;
+	xEnemie2 = xEnemie1 + sizeTile.x;
+	yEnemie1 = posEnemie.y;
+	yEnemie2 = yEnemie1 + sizeTile.y;
+	//mirar primer si la posicio x1 del player es troba entre les del enemic, x2 player entre x del enemic
+	//o com l'sprite del player es mes gran mirar si x1 < x1 enemie i x2 > x2 enemie
+	if (((posPlayer.x > xEnemie1) && (posPlayer.x < xEnemie2)) || (((posPlayer.x + spriteSize.x) > xEnemie1) && ((posPlayer.x + spriteSize.x) < xEnemie2)) || ((posPlayer.x < xEnemie1) && ((posPlayer.x + spriteSize.x) > xEnemie2)))
+	{
+		if (((posPlayer.y > yEnemie1) && (posPlayer.y < yEnemie2)) || (((posPlayer.y + spriteSize.y) > yEnemie1) && ((posPlayer.y + spriteSize.y) < yEnemie2)) || ((posPlayer.y < yEnemie1) && ((posPlayer.y + spriteSize.y) > yEnemie2))) 
+		{
+			dead = true;
+		}
+	}
 	
 }
