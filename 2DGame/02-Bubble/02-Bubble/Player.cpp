@@ -24,14 +24,12 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	dead = false;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteSize = glm::ivec2(20, 35);
-	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1, 0.5), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(7);
+	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1, 0.33), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(6);
 	
 	sprite->setAnimationSpeed(STAND_RIGHT, 8);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.0f));
 
-	sprite->setAnimationSpeed(DEAD, 8);
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.0f));
 
 	sprite->setAnimationSpeed(MOVE_RIGHT, 10);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.1f, 0.0f));
@@ -47,21 +45,21 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.9f, 0.0f));
 
 	sprite->setAnimationSpeed(JUMP_LEFT, 10);
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.0f, 0.5f));
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.1f, 0.5f));
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.2f, 0.5f));
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.3f, 0.5f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.0f, 0.33f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.1f, 0.33f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.2f, 0.33f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.3f, 0.33f));
 
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.9f, 0.5f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.9f, 0.33f));
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.8f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.7f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.6f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.5f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4f, 0.5f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.8f, 0.33f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.7f, 0.33f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.6f, 0.33f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.33f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4f, 0.33f));
 		
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -210,11 +208,12 @@ int Player::getPositionY()
 
 bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 {
+	//hago el tamaño de colision mas pequeño para que no se note tanto que tenemos pixeles vacios delante del sprite del player
 	int xEnemie1, xEnemie2, yEnemie1, yEnemie2;
-	xEnemie1 = posEnemie.x;
-	xEnemie2 = xEnemie1 + sizeTile.x;
-	yEnemie1 = posEnemie.y;
-	yEnemie2 = yEnemie1 + sizeTile.y;
+	xEnemie1 = posEnemie.x + 4;
+	xEnemie2 = xEnemie1 + sizeTile.x - 2;
+	yEnemie1 = posEnemie.y + 2;
+	yEnemie2 = yEnemie1 + sizeTile.y - 2;
 	//mirar primer si la posicio x1 del player es troba entre les del enemic, x2 player entre x del enemic
 	//o com l'sprite del player es mes gran mirar si x1 < x1 enemie i x2 > x2 enemie
 	if (((posPlayer.x >= xEnemie1) && (posPlayer.x <= xEnemie2)) || (((posPlayer.x + spriteSize.x) >= xEnemie1) && ((posPlayer.x + spriteSize.x) <= xEnemie2)) || ((posPlayer.x <= xEnemie1) && ((posPlayer.x + spriteSize.x) >= xEnemie2)))
