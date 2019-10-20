@@ -22,7 +22,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(20, 35), glm::vec2(0.1, 0.5), &spritesheet, &shaderProgram);
+	spriteSize = glm::ivec2(20, 35);
+	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1, 0.5), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(6);
 	
 	sprite->setAnimationSpeed(STAND_RIGHT, 8);
@@ -195,4 +196,14 @@ void Player::setPosition(const glm::vec2 &pos)
 int Player::getPositionX()
 {
 	return posPlayer.x;
+}
+
+int Player::getPositionY()
+{
+	return posPlayer.y;
+}
+
+void Player::dead(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
+{
+	
 }

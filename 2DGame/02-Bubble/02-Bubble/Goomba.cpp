@@ -23,8 +23,9 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	bJumping = false;
 	dead = false;
 	direction = MOVE_LEFT;
+	spriteSize = glm::ivec2(17, 20);
 	spritesheet.loadFromFile("images/GoombaTiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(17, 20), glm::vec2(0.33, 1.0), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.33, 1.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 8);
@@ -64,7 +65,7 @@ void Goomba::update(int deltaTime)
 	}
 	else
 	{
-		posPlayer.x -= 1;
+		posPlayer.x += 1;
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -89,4 +90,14 @@ void Goomba::setPosition(const glm::vec2& pos)
 int Goomba::getPositionX()
 {
 	return posPlayer.x;
+}
+
+int Goomba::getPositionY()
+{
+	return posPlayer.y;
+}
+
+glm::vec2 Goomba::getSpriteSize()
+{
+	return spriteSize;
 }
