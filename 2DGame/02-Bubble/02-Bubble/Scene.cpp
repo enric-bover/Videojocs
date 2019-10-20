@@ -5,12 +5,14 @@
 #include "Game.h"
 
 // --
-#define SCREEN_X 0
-#define SCREEN_Y 0
+#define CAMERA_X 0
+#define CAMERA_Y 0
+#define CAMERA_WIDTH 320
+#define CAMERA_HEIGHT 240
 #define NUMBER_OF_GOOMBAS 20
 // --
 #define INIT_PLAYER_X_TILES 3
-#define INIT_PLAYER_Y_TILES 11
+#define INIT_PLAYER_Y_TILES 10
 
 Scene::Scene()
 {
@@ -30,16 +32,16 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(CAMERA_X, CAMERA_Y), texProgram);
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
 	for (int i = 0; i < NUMBER_OF_GOOMBAS; i++)
 	{
 		goomba[i] = new Goomba();
-		goomba[i]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
 		goomba[i]->setTileMap(map);
 	}
 	//FICAR LES COORDENADES INICALS DELS GOOMBAS EN ALGUN ARXIU EXTERN
@@ -65,7 +67,7 @@ void Scene::init()
 	goomba[19]->setPosition(glm::vec2((25) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	
 
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 	// --
 
@@ -89,7 +91,7 @@ void Scene::render()
 	glm::mat4 modelview;
 
 	texProgram.use();
-	projection = glm::ortho(cameraX, cameraX + float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	projection = glm::ortho(cameraX, cameraX + float(CAMERA_WIDTH), float(CAMERA_HEIGHT), 0.f);
 
 	//+++
 	texProgram.setUniformMatrix4f("projection", projection);
@@ -139,13 +141,13 @@ void Scene::initShaders()
 void Scene::updateCamera(int deltaTime)
 {
 	float playerX = float(player->getPositionX());
-	if (playerX < SCREEN_WIDTH / 5)
+	if (playerX < CAMERA_WIDTH / 5)
 		cameraX = 0;
-	else if (playerX < map->getMapWidth() - 3*SCREEN_WIDTH / 5)
+	else if (playerX < map->getMapWidth() - 3*CAMERA_WIDTH / 5)
 	{
-		if (playerX - cameraX < SCREEN_WIDTH / 5)
-			cameraX = playerX - SCREEN_WIDTH / 5;
-		if (playerX - cameraX > 2 * SCREEN_WIDTH / 5)
-			cameraX = playerX - 2 * SCREEN_WIDTH / 5;
+		if (playerX - cameraX < CAMERA_WIDTH / 5)
+			cameraX = playerX - CAMERA_WIDTH / 5;
+		if (playerX - cameraX > 2 * CAMERA_WIDTH / 5)
+			cameraX = playerX - 2 * CAMERA_WIDTH / 5;
 	}
 }

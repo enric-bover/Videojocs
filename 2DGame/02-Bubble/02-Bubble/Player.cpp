@@ -74,10 +74,10 @@ void Player::update(int deltaTime)
 		{
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
-			posPlayer.x -= SPEED * deltaTime;
+			posPlayer.x -= int(SPEED * deltaTime);
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
 			{
-				posPlayer.x += SPEED * deltaTime;
+				posPlayer.x += int(SPEED * deltaTime);
 				sprite->changeAnimation(STAND_LEFT);
 			}
 		}
@@ -85,10 +85,10 @@ void Player::update(int deltaTime)
 		{
 			if (sprite->animation() != MOVE_RIGHT)
 				sprite->changeAnimation(MOVE_RIGHT);
-			posPlayer.x += SPEED * deltaTime;
+			posPlayer.x += int(SPEED * deltaTime);
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
 			{
-				posPlayer.x -= SPEED * deltaTime;
+				posPlayer.x -= int(SPEED * deltaTime);
 				sprite->changeAnimation(STAND_RIGHT);
 			}
 		}
@@ -117,32 +117,32 @@ void Player::update(int deltaTime)
 		{
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 			{
-				posPlayer.x += SPEED * deltaTime;
+				posPlayer.x += int(SPEED * deltaTime);
 			}
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
 			{
-				posPlayer.x -= SPEED * deltaTime;
+				posPlayer.x -= int(SPEED * deltaTime);
 			}
 			else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 			{
 				sprite->changeAnimation(JUMP_LEFT);
-				posPlayer.x -= SPEED * deltaTime;
+				posPlayer.x -= int(SPEED * deltaTime);
 			}
 		}
 		else if (sprite->animation() == JUMP_LEFT)
 		{
 			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 			{
-				posPlayer.x -= SPEED * deltaTime;
+				posPlayer.x -= int(SPEED * deltaTime);
 			}
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
 			{
-				posPlayer.x += SPEED * deltaTime;
+				posPlayer.x += int(SPEED * deltaTime);
 			}
 			else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 			{
 				sprite->changeAnimation(JUMP_RIGHT);
-				posPlayer.x += SPEED * deltaTime;
+				posPlayer.x += int(SPEED * deltaTime);
 			}
 		}
 
