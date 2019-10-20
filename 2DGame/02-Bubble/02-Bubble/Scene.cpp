@@ -7,12 +7,12 @@
 // --
 #define CAMERA_X 0
 #define CAMERA_Y 0
-#define CAMERA_WIDTH 640
-#define CAMERA_HEIGHT 480
+#define CAMERA_WIDTH 320
+#define CAMERA_HEIGHT 240
 #define NUMBER_OF_GOOMBAS 20
 // --
 #define INIT_PLAYER_X_TILES 3
-#define INIT_PLAYER_Y_TILES 11
+#define INIT_PLAYER_Y_TILES 10
 
 Scene::Scene()
 {
