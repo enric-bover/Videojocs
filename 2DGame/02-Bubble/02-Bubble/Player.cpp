@@ -11,10 +11,15 @@
 #define FALL_STEP 4
 #define SPEED 0.12
 
-
+//DI: diagonal
+//U: up
+//D: down
+//R: right
+//L: left
+//S: straight
 enum PlayerAnims
 {
-	STAND_RIGHT, MOVE_RIGHT, STAND_LEFT, MOVE_LEFT, JUMP_RIGHT, JUMP_LEFT, DEAD
+	STAND_RIGHT, MOVE_RIGHT, STAND_LEFT, MOVE_LEFT, JUMP_RIGHT, JUMP_LEFT, DEAD, SHOOT_S_L, SHOOT_S_R, SHOOT_DI_U_L, SHOOT_DI_U_R, SHOOT_DI_D_L, SHOOT_DI_D_R
 };
 
 
@@ -24,9 +29,14 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	dead = false;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteSize = glm::ivec2(20, 35);
+	spriteSize2 = glm::ivec2(25, 35);
+
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1, 0.33), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(6);
+	sprite->setNumberAnimations(8);
 	
+	sprite2 = Sprite::createSprite(spriteSize2, glm::vec2(0.1667, 0.5), &spritesheet, &shaderProgram);
+	sprite2->setNumberAnimations(4);
+
 	sprite->setAnimationSpeed(STAND_RIGHT, 8);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.0f));
 
@@ -60,10 +70,47 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.6f, 0.33f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.33f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4f, 0.33f));
+
+	sprite->setAnimationSpeed(SHOOT_DI_U_R, 10);
+	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.0f, 0.66f));
+	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.1f, 0.66f));
+	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.2f, 0.66f));
+
+	sprite->setAnimationSpeed(SHOOT_DI_U_L, 10);
+	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.3f, 0.66f));
+	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.4f, 0.66f));
+	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.5f, 0.66f));
+
+	//-------------------------------------------------------- SECOND SPRITE CHARGE
+
+	sprite2->setAnimationSpeed(SHOOT_S_R, 10);
+	sprite2->addKeyframe(SHOOT_S_R, glm::vec2(0.0f, 0.0f));
+	sprite2->addKeyframe(SHOOT_S_R, glm::vec2(0.1667f, 0.0f));
+	sprite2->addKeyframe(SHOOT_S_R, glm::vec2(0.3333f, 0.0f));
+
+	sprite2->setAnimationSpeed(SHOOT_S_L, 10);
+	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.5f, 0.0f));
+	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.6667f, 0.0f));
+	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.8333f, 0.0f));
+
+	sprite2->setAnimationSpeed(SHOOT_DI_D_R, 10);
+	sprite2->addKeyframe(SHOOT_DI_D_R, glm::vec2(0.0f, 0.5f));
+	sprite2->addKeyframe(SHOOT_DI_D_R, glm::vec2(0.1667f, 0.5f));
+	sprite2->addKeyframe(SHOOT_DI_D_R, glm::vec2(0.3333f, 0.5f));
+
+	sprite2->setAnimationSpeed(SHOOT_DI_D_L, 10);
+	sprite2->addKeyframe(SHOOT_DI_D_L, glm::vec2(0.5f, 0.5f));
+	sprite2->addKeyframe(SHOOT_DI_D_L, glm::vec2(0.6667f, 0.5f));
+	sprite2->addKeyframe(SHOOT_DI_D_L, glm::vec2(0.8333f, 0.5f));
+
 		
 	sprite->changeAnimation(0);
+	sprite2->changeAnimation(0);
+
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
 
 }
 
