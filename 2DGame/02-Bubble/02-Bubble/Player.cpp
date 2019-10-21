@@ -19,7 +19,12 @@
 //S: straight
 enum PlayerAnims
 {
-	STAND_RIGHT, MOVE_RIGHT, STAND_LEFT, MOVE_LEFT, JUMP_RIGHT, JUMP_LEFT, DEAD, SHOOT_S_L, SHOOT_S_R, SHOOT_DI_U_L, SHOOT_DI_U_R, SHOOT_DI_D_L, SHOOT_DI_D_R
+	STAND_RIGHT, MOVE_RIGHT, STAND_LEFT, MOVE_LEFT, JUMP_RIGHT, JUMP_LEFT, DEAD, SHOOT_DI_U_L, SHOOT_DI_U_R, STAND_SHOOT_DI_U_L, STAND_SHOOT_DI_U_R
+};
+
+enum PlayerAnims2
+{
+	SHOOT_S_L, SHOOT_S_R, SHOOT_DI_D_L, SHOOT_DI_D_R, SHOOT_STAND_S_L, SHOOT_STAND_S_R
 };
 
 
@@ -27,15 +32,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	dead = false;
+	chooseSprite = 1;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet2.loadFromFile("images/ShootingStraight+DiagonalDown.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
 	spriteSize = glm::ivec2(20, 35);
 	spriteSize2 = glm::ivec2(25, 35);
 
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1, 0.33), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(8);
+	sprite->setNumberAnimations(10);
 	
-	sprite2 = Sprite::createSprite(spriteSize2, glm::vec2(0.1667, 0.5), &spritesheet, &shaderProgram);
-	sprite2->setNumberAnimations(4);
+	sprite2 = Sprite::createSprite(spriteSize2, glm::vec2(0.1667, 0.5), &spritesheet2, &shaderProgram);
+	sprite2->setNumberAnimations(6);
 
 	sprite->setAnimationSpeed(STAND_RIGHT, 8);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.0f));
@@ -55,31 +63,39 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.9f, 0.0f));
 
 	sprite->setAnimationSpeed(JUMP_LEFT, 10);
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.0f, 0.33f));
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.1f, 0.33f));
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.2f, 0.33f));
-	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.3f, 0.33f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.0f, 0.3333f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.1f, 0.3333f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.2f, 0.3333f));
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.3f, 0.3333f));
 
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.9f, 0.33f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.9f, 0.3333f));
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.8f, 0.33f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.7f, 0.33f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.6f, 0.33f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.33f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4f, 0.33f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.8f, 0.3333f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.7f, 0.3333f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.6f, 0.3333f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.3333f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4f, 0.3333f));
+
+
+	sprite->setAnimationSpeed(STAND_SHOOT_DI_U_L, 10);
+	sprite->addKeyframe(STAND_SHOOT_DI_U_L, glm::vec2(0.5f, 0.6666f));
+
+
+	sprite->setAnimationSpeed(STAND_SHOOT_DI_U_R, 10);
+	sprite->addKeyframe(STAND_SHOOT_DI_U_R, glm::vec2(0.0f, 0.6666f));
 
 	sprite->setAnimationSpeed(SHOOT_DI_U_R, 10);
-	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.0f, 0.66f));
-	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.1f, 0.66f));
-	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.2f, 0.66f));
+	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.0f, 0.6666f));
+	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.1f, 0.6666f));
+	sprite->addKeyframe(SHOOT_DI_U_R, glm::vec2(0.2f, 0.6666f));
 
 	sprite->setAnimationSpeed(SHOOT_DI_U_L, 10);
-	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.3f, 0.66f));
-	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.4f, 0.66f));
-	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.5f, 0.66f));
+	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.3f, 0.6666f));
+	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.4f, 0.6666f));
+	sprite->addKeyframe(SHOOT_DI_U_L, glm::vec2(0.5f, 0.6666f));
 
 	//-------------------------------------------------------- SECOND SPRITE CHARGE
 
@@ -88,10 +104,17 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite2->addKeyframe(SHOOT_S_R, glm::vec2(0.1667f, 0.0f));
 	sprite2->addKeyframe(SHOOT_S_R, glm::vec2(0.3333f, 0.0f));
 
+
+	sprite2->setAnimationSpeed(SHOOT_STAND_S_R, 10);
+	sprite2->addKeyframe(SHOOT_STAND_S_R, glm::vec2(0.0f, 0.0f));
+
 	sprite2->setAnimationSpeed(SHOOT_S_L, 10);
-	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.5f, 0.0f));
-	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.6667f, 0.0f));
 	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.8333f, 0.0f));
+	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.6667f, 0.0f));
+	sprite2->addKeyframe(SHOOT_S_L, glm::vec2(0.5f, 0.0f));
+
+	sprite2->setAnimationSpeed(SHOOT_STAND_S_L, 10);
+	sprite2->addKeyframe(SHOOT_STAND_S_L, glm::vec2(0.8333f, 0.0f));
 
 	sprite2->setAnimationSpeed(SHOOT_DI_D_R, 10);
 	sprite2->addKeyframe(SHOOT_DI_D_R, glm::vec2(0.0f, 0.5f));
@@ -118,82 +141,225 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
+	sprite2->update(deltaTime);
+
 	
 	if (!bJumping) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
-			if (sprite->animation() != MOVE_LEFT)
-				sprite->changeAnimation(MOVE_LEFT);
+			if (Game::instance().getKey(' ')) 
+			{
+				if (Game::instance().getKey('w'))
+				{
+					if (sprite->animation() != SHOOT_DI_U_L)
+						sprite->changeAnimation(SHOOT_DI_U_L);
+					chooseSprite = 1;
+				}
+				else if (Game::instance().getKey('s'))
+				{
+					if (sprite2->animation() != SHOOT_DI_D_L)
+						sprite2->changeAnimation(SHOOT_DI_D_L);
+					chooseSprite = 2;
+				}
+				else
+				{
+					if (sprite2->animation() != SHOOT_S_L)
+						sprite2->changeAnimation(SHOOT_S_L);
+					chooseSprite = 2;
+				}
+			}
+			else
+			{
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
+				chooseSprite = 1;
+
+			}
 			posPlayer.x -= int(SPEED * deltaTime);
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
 			{
 				posPlayer.x += int(SPEED * deltaTime);
 				sprite->changeAnimation(STAND_LEFT);
+				chooseSprite = 1;
 			}
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{
-			if (sprite->animation() != MOVE_RIGHT)
-				sprite->changeAnimation(MOVE_RIGHT);
+			if (Game::instance().getKey(' '))
+			{
+				if (Game::instance().getKey('w'))
+				{
+					if (sprite->animation() != SHOOT_DI_U_R)
+						sprite->changeAnimation(SHOOT_DI_U_R);
+					chooseSprite = 1;
+				}
+				else if (Game::instance().getKey('s'))
+				{
+					if (sprite2->animation() != SHOOT_DI_D_R)
+						sprite2->changeAnimation(SHOOT_DI_D_R);
+					chooseSprite = 2;
+				}
+				else
+				{
+					if (sprite2->animation() != SHOOT_S_R)
+						sprite2->changeAnimation(SHOOT_S_R);
+					chooseSprite = 2;
+				}
+			}
+			else
+			{
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				chooseSprite = 1;
+
+			}
 			posPlayer.x += int(SPEED * deltaTime);
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
 			{
 				posPlayer.x -= int(SPEED * deltaTime);
 				sprite->changeAnimation(STAND_RIGHT);
+				chooseSprite = 1;
 			}
 		}
 		else
 		{
-			if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT)
-				sprite->changeAnimation(STAND_LEFT);
-			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT)
-				sprite->changeAnimation(STAND_RIGHT);
+			if (!Game::instance().getKey(' '))
+			{
+				if (chooseSprite == 1)
+				{
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT   || sprite->animation() == SHOOT_DI_U_L || sprite->animation() == STAND_SHOOT_DI_U_L)
+						sprite->changeAnimation(STAND_LEFT);
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT  || sprite->animation() == SHOOT_DI_U_R || sprite->animation() == STAND_SHOOT_DI_U_R)
+						sprite->changeAnimation(STAND_RIGHT);
+				}
+				else if (chooseSprite == 2)
+				{
+					if ( sprite2->animation() == SHOOT_STAND_S_L || sprite2->animation() == SHOOT_DI_D_L || sprite2->animation() == SHOOT_STAND_S_L)
+						sprite->changeAnimation(STAND_LEFT);
+					if (sprite2->animation() == SHOOT_STAND_S_R || sprite2->animation() == SHOOT_DI_D_R || sprite2->animation() == SHOOT_STAND_S_R)
+						sprite->changeAnimation(STAND_RIGHT);
+
+				}
+				chooseSprite = 1;
+			}
+			else
+			{
+				if (chooseSprite == 1)
+				{
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT || sprite->animation() == SHOOT_DI_U_L || sprite->animation() == STAND_SHOOT_DI_U_L || sprite->animation() == STAND_LEFT)
+						sprite2->changeAnimation(SHOOT_STAND_S_L);
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT || sprite->animation() == SHOOT_DI_U_R || sprite->animation() == STAND_SHOOT_DI_U_R || sprite->animation() == STAND_RIGHT)
+						sprite2->changeAnimation(SHOOT_STAND_S_R);
+				}
+				else if (chooseSprite == 2)
+				{
+					if (sprite2->animation() == SHOOT_DI_D_L || sprite2->animation() == SHOOT_S_L)
+						sprite2->changeAnimation(SHOOT_STAND_S_L);
+					if (sprite2->animation() == SHOOT_DI_D_R || sprite2->animation() == SHOOT_S_R)
+						sprite2->changeAnimation(SHOOT_STAND_S_R);
+
+				}
+				chooseSprite = 2;
+			}
+
 		}
+
 	}
 
 	if (bJumping)
 	{
+		if (chooseSprite == 1)
+		{
+			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT || sprite->animation() == SHOOT_DI_U_L || sprite->animation() == STAND_SHOOT_DI_U_L)
+			{
+				sprite->changeAnimation(JUMP_LEFT);
 
-		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
-		{
-			sprite->changeAnimation(JUMP_LEFT);
+			}
+			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT || sprite->animation() == SHOOT_DI_U_R || sprite->animation() == STAND_SHOOT_DI_U_R)
+			{
+				sprite->changeAnimation(JUMP_RIGHT);
+			}
+			else if (sprite->animation() == JUMP_RIGHT)
+			{
+				if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+				{
+					posPlayer.x += int(SPEED * deltaTime);
+				}
+				else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+				{
+					sprite->changeAnimation(JUMP_LEFT);
+					posPlayer.x -= int(SPEED * deltaTime);
+				}
+				if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x -= int(SPEED * deltaTime);
+				}
 
+			}
+			else if (sprite->animation() == JUMP_LEFT)
+			{
+				if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+				{
+					posPlayer.x -= int(SPEED * deltaTime);
+				}
+				else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+				{
+					sprite->changeAnimation(JUMP_RIGHT);
+					posPlayer.x += int(SPEED * deltaTime);
+				}
+				if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x += int(SPEED * deltaTime);
+				}
+
+			}
 		}
-		else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+		else if (chooseSprite == 2)
 		{
-			sprite->changeAnimation(JUMP_RIGHT);
-		}
-		else if (sprite->animation() == JUMP_RIGHT)
-		{
-		if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-		{
-			posPlayer.x += int(SPEED * deltaTime);
-		}
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
-		{
-			posPlayer.x -= int(SPEED * deltaTime);
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-		{
-			sprite->changeAnimation(JUMP_LEFT);
-			posPlayer.x -= int(SPEED * deltaTime);
-		}
-		}
-		else if (sprite->animation() == JUMP_LEFT)
-		{
-		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-		{
-			posPlayer.x -= int(SPEED * deltaTime);
-		}
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
-		{
-			posPlayer.x += int(SPEED * deltaTime);
-		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-		{
-			sprite->changeAnimation(JUMP_RIGHT);
-			posPlayer.x += int(SPEED * deltaTime);
-		}
+			if (sprite2->animation() == SHOOT_S_L || sprite2->animation() == SHOOT_DI_D_L || sprite2->animation() == SHOOT_STAND_S_L)
+			{
+				sprite->changeAnimation(JUMP_LEFT);
+
+			}
+			else if (sprite2->animation() == SHOOT_S_R || sprite2->animation() == SHOOT_DI_D_R || sprite2->animation() == SHOOT_STAND_S_R)
+			{
+				sprite->changeAnimation(JUMP_RIGHT);
+			}
+
+			if (sprite->animation() == JUMP_RIGHT)
+			{
+				if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+				{
+					posPlayer.x += int(SPEED * deltaTime);
+				}
+				else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+				{
+					sprite->changeAnimation(JUMP_LEFT);
+					posPlayer.x -= int(SPEED * deltaTime);
+				}
+				if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x -= int(SPEED * deltaTime);
+				}
+
+			}
+			else if (sprite->animation() == JUMP_LEFT)
+			{
+				if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+				{
+					posPlayer.x -= int(SPEED * deltaTime);
+				}
+				else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+				{
+					sprite->changeAnimation(JUMP_RIGHT);
+					posPlayer.x += int(SPEED * deltaTime);
+				}
+				if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x += int(SPEED * deltaTime);
+				}
+
+			}
 		}
 
 		jumpAngle += JUMP_ANGLE_STEP;
@@ -208,6 +374,7 @@ void Player::update(int deltaTime)
 			if (jumpAngle > 90)
 				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(20, 35), &posPlayer.y);
 		}
+		chooseSprite = 1;
 	}
 	else
 	{
@@ -225,11 +392,16 @@ void Player::update(int deltaTime)
 		}
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
 }
 
 void Player::render()
 {
-	sprite->render();
+	if(chooseSprite == 1)
+		sprite->render();
+	else
+		sprite2->render();
 }
 
 void Player::setTileMap(TileMap* tileMap)
@@ -241,6 +413,7 @@ void Player::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 int Player::getPositionX()
