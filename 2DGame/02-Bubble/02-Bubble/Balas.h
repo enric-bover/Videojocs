@@ -1,5 +1,5 @@
-#ifndef _PLAYER_INCLUDE
-#define _PLAYER_INCLUDE
+#ifndef _BALAS_INCLUDE
+#define _BALAS_INCLUDE
 
 
 #include "Sprite.h"
@@ -10,35 +10,30 @@
 // all properties it needs to track its movement, jumping, and collisions.
 
 
-class Player
+class Balas
 {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
 	void render();
-	
-	void setTileMap(TileMap *tileMap);
-	void setPosition(const glm::vec2 &pos);
+
+	void setTileMap(TileMap* tileMap);
+	void setPosition(const glm::vec2& pos);
 	int getPositionX();
 	int getPositionY();
 	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 
 private:
 	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer, spriteSize, spriteSize2;
+	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
 	int jumpAngle, startY;
 	Texture spritesheet;
-	Texture spritesheet2;
-	Sprite *sprite;
-	Sprite *sprite2;
-	TileMap *map;
+	Sprite* sprite;
+	Sprite* sprite2;
+	TileMap* map;
 	bool dead;
-	int chooseSprite;
 
 };
 
-
-#endif // _PLAYER_INCLUDE
-
-
+#endif
