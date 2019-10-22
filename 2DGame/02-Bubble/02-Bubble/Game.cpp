@@ -2,17 +2,24 @@
 #include <GL/glut.h>
 #include "Game.h"
 
+#define MENU 0
+#define EXIT -1
+#define GAME 1
 
 void Game::init()
 {
 	bPlay = true;
 	glClearColor(93.f/255.f, 148.f/255.f, 251.f/255.f, 1.0f);
 	scene.init();
+	menu.init();
+	screen = MENU;
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
+	if (screen == MENU) screen = menu.update(deltaTime);
+	else if (screen == GAME) screen = scene.update(deltaTime);
+	else bPlay = false;
 	
 	return bPlay;
 }
@@ -20,7 +27,8 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	if (screen == MENU) menu.render();
+	else if (screen == GAME) scene.render();
 }
 
 void Game::keyPressed(int key)

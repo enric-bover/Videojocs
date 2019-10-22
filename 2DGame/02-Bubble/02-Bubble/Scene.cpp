@@ -80,7 +80,7 @@ void Scene::init()
 	cameraX = 0.0f;
 }
 
-void Scene::update(int deltaTime)
+int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
@@ -97,6 +97,8 @@ void Scene::update(int deltaTime)
 
 	// --
 	updateCamera(deltaTime);
+	// si te quedas sin vidas retorna 0 que es volver al Menu
+	return 1;	
 }
 
 void Scene::render()
