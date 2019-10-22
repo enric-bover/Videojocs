@@ -6,9 +6,6 @@
 #include "TileMap.h"
 
 
-// Player is basically a Sprite that represents the player. As such it has
-// all properties it needs to track its movement, jumping, and collisions.
-
 
 class Balas
 {
@@ -23,6 +20,7 @@ public:
 	int getPositionX();
 	int getPositionY();
 	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
+	bool isAlive();
 
 private:
 	bool bJumping;
@@ -32,7 +30,7 @@ private:
 	Sprite* sprite;
 	Sprite* sprite2;
 	TileMap* map;
-	bool dead;
+	bool alive;
 
 };
 

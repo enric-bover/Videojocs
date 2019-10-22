@@ -4,6 +4,8 @@
 #include <GL/glut.h>
 #include "Player.h"
 #include "Game.h"
+#include "Balas.h"
+
 
 
 #define JUMP_ANGLE_STEP 4
@@ -28,16 +30,25 @@ enum PlayerAnims2
 };
 
 
+
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	dead = false;
 	chooseSprite = 1;
+	actualBullet = 0;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet2.loadFromFile("images/ShootingStraight+DiagonalDown.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	spriteSize = glm::ivec2(20, 35);
 	spriteSize2 = glm::ivec2(25, 35);
+
+	for (int i = 0; i < 10; i++)
+	{
+		bales[i] = new Balas();
+		bales[i]->init(tileMapPos, shaderProgram);
+		bales[i]->setTileMap(map);
+	}
 
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1, 0.33), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(10);
@@ -143,16 +154,18 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	sprite2->update(deltaTime);
 
-	
+	if (actualBullet == 10) actualBullet = 0;
 	if (!bJumping) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
-			if (Game::instance().getKey(' ')) 
+			if (Game::instance().getKey(' '))		//dispares
 			{
+				bales[1]->update(deltaTime);
 				if (Game::instance().getKey('w'))
 				{
 					if (sprite->animation() != SHOOT_DI_U_L)
 						sprite->changeAnimation(SHOOT_DI_U_L);
+
 					chooseSprite = 1;
 				}
 				else if (Game::instance().getKey('s'))
@@ -185,7 +198,7 @@ void Player::update(int deltaTime)
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{
-			if (Game::instance().getKey(' '))
+			if (Game::instance().getKey(' '))		//dispares
 			{
 				if (Game::instance().getKey('w'))
 				{
@@ -393,7 +406,7 @@ void Player::update(int deltaTime)
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-
+	bales[1]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 void Player::render()
@@ -402,6 +415,7 @@ void Player::render()
 		sprite->render();
 	else
 		sprite2->render();
+	bales[1]->render();
 }
 
 void Player::setTileMap(TileMap* tileMap)

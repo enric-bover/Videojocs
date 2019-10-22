@@ -4,6 +4,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Balas.h"
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -35,6 +36,8 @@ private:
 	TileMap *map;
 	bool dead;
 	int chooseSprite;
+	int actualBullet;
+	Balas *bales[10];
 
 };
 

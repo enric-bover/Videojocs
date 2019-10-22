@@ -106,5 +106,15 @@ void Sprite::setPosition(const glm::vec2 &pos)
 	position = pos;
 }
 
+int Sprite::getCurrentKeyFrame()
+{
+	return currentKeyframe;
+}
+
+bool Sprite::lastKeyFrame()
+{
+	return (animations[currentAnimation].keyframeDispl.size() - 1) == currentKeyframe;
+}
+
 
 
