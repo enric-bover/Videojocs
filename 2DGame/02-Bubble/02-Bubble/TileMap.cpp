@@ -104,6 +104,10 @@ bool TileMap::loadLevel(const string &levelFile)
 		}
 	}
 
+	getline(fin, line);
+	sstream.str(line);
+	sstream >> posIni.x >> posIni.y;
+
 	fin.close();
 	
 	return true;
@@ -223,6 +227,16 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 float TileMap::getMapWidth()
 {
 	return mapSize.x * tileSize;
+}
+
+int TileMap::getPosIniX()
+{
+	return posIni.x;
+}
+
+int TileMap::getPosIniY()
+{
+	return posIni.y;
 }
 
 
