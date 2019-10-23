@@ -22,6 +22,8 @@ public:
 	void setPosition(const glm::vec2& pos);
 	int getPositionX();
 	int getPositionY();
+	bool isDead();
+	void damage();
 	glm::vec2 getSpriteSize();
 	 
 
@@ -33,7 +35,7 @@ private:
 	Texture spritesheet2;
 	Sprite* sprite;
 	TileMap* map;
-	bool dead;
+	int hp;
 	int direction;
 
 };

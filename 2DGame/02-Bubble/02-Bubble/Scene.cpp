@@ -55,13 +55,19 @@ int Scene::update(int deltaTime)
 	player->update(deltaTime);
 	bool isDead = false;
 	for (int i = 0; i < 1 && !isDead; i++) {
-		if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
-			goomba[i]->update(deltaTime);
-			if (player->dies(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
-			{
-				isDead = true;
-				--lives;
-				setPlayerIniPos();
+		if (!goomba[i]->isDead()) {
+			if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
+				goomba[i]->update(deltaTime);
+				if (player->dies(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
+				{
+					isDead = true;
+					--lives;
+					setPlayerIniPos();
+				}
+				if (player->kills(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
+				{
+					goomba[i]->damage();
+				}
 			}
 		}
 
@@ -97,7 +103,8 @@ void Scene::render()
 	for (int i = 0; i < 1; i++)
 	{
 		if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
-			goomba[i]->render();
+			if(!goomba[i]->isDead())
+				goomba[i]->render();
 		}
 	}
 

@@ -40,16 +40,16 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 	sprite->setNumberAnimations(3);
 
-	sprite->setAnimationSpeed(SHOOT, 8);
+	sprite->setAnimationSpeed(SHOOT, 3);
 	sprite->addKeyframe(SHOOT, glm::vec2(0.f, 0.0f));
 	sprite->addKeyframe(SHOOT, glm::vec2(0.2f, 0.0f));
 	sprite->addKeyframe(SHOOT, glm::vec2(0.4f, 0.0f));
 	sprite->addKeyframe(SHOOT, glm::vec2(0.6f, 0.0f));
 
-	sprite->setAnimationSpeed(FLY, 8);
+	sprite->setAnimationSpeed(FLY, 3);
 	sprite->addKeyframe(FLY, glm::vec2(0.6f, 0.0f));
 
-	sprite->setAnimationSpeed(HIT, 8);
+	sprite->setAnimationSpeed(HIT, 3);
 	sprite->addKeyframe(HIT, glm::vec2(0.8f, 0.0f));
 
 
@@ -64,6 +64,7 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 void Balas::update(int deltaTime)
 {
 	sprite->update(deltaTime);
+	posPlayer.x += 5;
 	if (sprite->animation()  == SHOOT)
 	{
 		if (sprite->lastKeyFrame())
@@ -75,17 +76,14 @@ void Balas::update(int deltaTime)
 		posPlayer.x += 5;
 	}
 
-	
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
 
 }
 
 void Balas::render()
 {
-	if (alive)
-	{
-		sprite->render();
-	}
-
+	sprite->render();
 }
 
 void Balas::setTileMap(TileMap* tileMap)
@@ -96,6 +94,7 @@ void Balas::setTileMap(TileMap* tileMap)
 void Balas::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
+	alive = true;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 

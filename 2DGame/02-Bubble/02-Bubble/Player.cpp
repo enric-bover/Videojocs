@@ -43,7 +43,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spriteSize = glm::ivec2(20, 35);
 	spriteSize2 = glm::ivec2(25, 35);
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		bales[i] = new Balas();
 		bales[i]->init(tileMapPos, shaderProgram);
@@ -154,13 +154,13 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	sprite2->update(deltaTime);
 
-	if (actualBullet == 10) actualBullet = 0;
+	if (actualBullet == 50) actualBullet = 0;
 	if (!bJumping) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
 			if (Game::instance().getKey(' '))		//dispares
 			{
-				bales[1]->update(deltaTime);
+				
 				if (Game::instance().getKey('w'))
 				{
 					if (sprite->animation() != SHOOT_DI_U_L)
@@ -176,6 +176,7 @@ void Player::update(int deltaTime)
 				}
 				else
 				{
+					
 					if (sprite2->animation() != SHOOT_S_L)
 						sprite2->changeAnimation(SHOOT_S_L);
 					chooseSprite = 2;
@@ -214,6 +215,8 @@ void Player::update(int deltaTime)
 				}
 				else
 				{
+					bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 15), float(tileMapDispl.y + posPlayer.y + 11)));
+					actualBullet++;
 					if (sprite2->animation() != SHOOT_S_R)
 						sprite2->changeAnimation(SHOOT_S_R);
 					chooseSprite = 2;
@@ -406,7 +409,12 @@ void Player::update(int deltaTime)
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	bales[1]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
+	for (int i = 0; i < 50; i++)
+	{
+		if (bales[i]->isAlive())
+			bales[i]->update(deltaTime);
+	}
 }
 
 void Player::render()
@@ -415,7 +423,14 @@ void Player::render()
 		sprite->render();
 	else
 		sprite2->render();
-	bales[1]->render();
+	for (int i = 0; i < 50; i++)
+	{
+		if (bales[i]->isAlive())
+		{
+			bales[i]->render();
+		}
+
+	}
 }
 
 void Player::setTileMap(TileMap* tileMap)
@@ -459,5 +474,17 @@ bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 	}
 	return false;
 	
+}
+
+bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile) 
+{
+	for (int i = 0; i < 10; i++) 
+	{
+		if (bales[i]->dies(posEnemie, sizeTile))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 

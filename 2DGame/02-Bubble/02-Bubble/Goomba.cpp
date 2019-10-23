@@ -21,7 +21,7 @@ enum GoombaAnimations
 void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	bJumping = false;
-	dead = false;
+	hp = 3;
 	direction = MOVE_LEFT;
 	spriteSize = glm::ivec2(17, 20);
 	spritesheet.loadFromFile("images/GoombaTiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -46,7 +46,7 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 // --
 void Goomba::update(int deltaTime)
 {
-	//if (!dead && )
+
 	sprite->update(deltaTime);
 	posPlayer.y += FALL_STEP;
 	bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(17, 20), &posPlayer.y);
@@ -100,4 +100,14 @@ int Goomba::getPositionY()
 glm::vec2 Goomba::getSpriteSize()
 {
 	return spriteSize;
+}
+
+bool Goomba::isDead()
+{
+	return (hp <= 0);
+}
+
+void Goomba::damage()
+{
+	hp--;
 }

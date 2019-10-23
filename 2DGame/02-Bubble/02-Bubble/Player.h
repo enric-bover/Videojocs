@@ -24,6 +24,8 @@ public:
 	int getPositionX();
 	int getPositionY();
 	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
+	bool kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
+
 
 private:
 	bool bJumping;
@@ -37,7 +39,7 @@ private:
 	bool dead;
 	int chooseSprite;
 	int actualBullet;
-	Balas *bales[10];
+	Balas *bales[50];
 
 };
 
