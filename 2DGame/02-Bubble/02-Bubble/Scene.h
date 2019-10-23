@@ -21,7 +21,7 @@ public:
 	~Scene();
 
 	void init();
-	void update(int deltaTime);
+	int update(int deltaTime);
 	void render();
 
 private:
