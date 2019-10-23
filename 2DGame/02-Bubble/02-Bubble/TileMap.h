@@ -32,6 +32,8 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	float getMapWidth();
+	int getPosIniX();
+	int getPosIniY();
 	
 private:
 	bool loadLevel(const string &levelFile);
@@ -48,6 +50,7 @@ private:
 	int *map;
 	// --
 	bool* collisionMap;
+	glm::ivec2 posIni;
 
 };
 

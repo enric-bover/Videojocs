@@ -27,6 +27,9 @@ public:
 private:
 	void initShaders();
 	void updateCamera(int deltaTime);
+	void loadLevel(int lvl);
+	void loadEnemies1();
+	void setPlayerIniPos();
 
 private:
 	TileMap *map;
@@ -36,9 +39,11 @@ private:
 	bool first;
 	float currentTime;
 	glm::mat4 projection;
-
-	// --
 	float cameraX;
+	int level;
+	int lives;
+	// Text textLifes;
+	bool frontalCamera;
 
 };
 
