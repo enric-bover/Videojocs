@@ -26,6 +26,8 @@ public:
 	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 	bool kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 
+private:
+	void shoot(const glm::vec2& pos, int angle);
 
 private:
 	bool bJumping;
@@ -41,6 +43,7 @@ private:
 	int actualBullet;
 	Balas *bales[50];
 	bool right;
+	
 
 };
 

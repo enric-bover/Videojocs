@@ -169,23 +169,23 @@ void Player::update(int deltaTime)
 			right = false;
 			if (Game::instance().getKey(' '))		//dispares
 			{
-				
 				if (Game::instance().getKey('w'))
 				{
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_L);
 					if (sprite->animation() != SHOOT_DI_U_L)
 						sprite->changeAnimation(SHOOT_DI_U_L);
-
 					chooseSprite = 1;
 				}
 				else if (Game::instance().getKey('s'))
 				{
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_L);
 					if (sprite2->animation() != SHOOT_DI_D_L)
 						sprite2->changeAnimation(SHOOT_DI_D_L);
 					chooseSprite = 2;
 				}
 				else
 				{
-					
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_L);
 					if (sprite2->animation() != SHOOT_S_L)
 						sprite2->changeAnimation(SHOOT_S_L);
 					chooseSprite = 2;
@@ -196,7 +196,6 @@ void Player::update(int deltaTime)
 				if (sprite->animation() != MOVE_LEFT)
 					sprite->changeAnimation(MOVE_LEFT);
 				chooseSprite = 1;
-
 			}
 			posPlayer.x -= int(SPEED * deltaTime);
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
@@ -213,20 +212,21 @@ void Player::update(int deltaTime)
 			{
 				if (Game::instance().getKey('w'))
 				{
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_R);
 					if (sprite->animation() != SHOOT_DI_U_R)
 						sprite->changeAnimation(SHOOT_DI_U_R);
 					chooseSprite = 1;
 				}
 				else if (Game::instance().getKey('s'))
 				{
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_R);
 					if (sprite2->animation() != SHOOT_DI_D_R)
 						sprite2->changeAnimation(SHOOT_DI_D_R);
 					chooseSprite = 2;
 				}
 				else
 				{
-					bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 15), float(tileMapDispl.y + posPlayer.y + 11)));
-					actualBullet++;
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_R);
 					if (sprite2->animation() != SHOOT_S_R)
 						sprite2->changeAnimation(SHOOT_S_R);
 					chooseSprite = 2;
@@ -273,16 +273,19 @@ void Player::update(int deltaTime)
 				{
 					if (Game::instance().getKey('w'))
 					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_R);
 						sprite->changeAnimation(STAND_SHOOT_DI_U_R);
 						chooseSprite = 1;
 					}
 					else if (Game::instance().getKey('s'))
 					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_R);
 						sprite2->changeAnimation(STAND_SHOOT_DI_D_R);
 						chooseSprite = 2;
 					}
 					else 
 					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_R);
 						sprite2->changeAnimation(SHOOT_STAND_S_R);
 						chooseSprite = 2;
 					}
@@ -292,16 +295,19 @@ void Player::update(int deltaTime)
 				{
 					if (Game::instance().getKey('w'))
 					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_L);
 						sprite->changeAnimation(STAND_SHOOT_DI_U_L);
 						chooseSprite = 1;
 					}
 					else if (Game::instance().getKey('s'))
 					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_L);
 						sprite2->changeAnimation(STAND_SHOOT_DI_D_L);
 						chooseSprite = 2;
 					}
 					else
 					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_L);
 						sprite2->changeAnimation(SHOOT_STAND_S_L);
 						chooseSprite = 2;
 					}
@@ -371,6 +377,43 @@ void Player::update(int deltaTime)
 			{
 				right = false;
 				sprite->changeAnimation(JUMP_LEFT);
+			}
+
+			if (right)
+			{
+				if (Game::instance().getKey(' '))
+				{
+					if (Game::instance().getKey('w'))
+					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_R);
+					}
+					else if (Game::instance().getKey('s'))
+					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_R);
+					}
+					else
+					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_R);
+					}
+				}
+			}
+			else
+			{
+				if (Game::instance().getKey(' '))
+				{
+					if (Game::instance().getKey('w'))
+					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_L);
+					}
+					else if (Game::instance().getKey('s'))
+					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_L);
+					}
+					else
+					{
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_L);
+					}
+				}
 			}
 		
 
@@ -470,6 +513,15 @@ bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 		}
 	}
 	return false;
+}
+
+void Player::shoot(const glm::vec2& pos, int angle) 
+{
+	bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 15), float(tileMapDispl.y + posPlayer.y + 11)));
+
+
+
+	actualBullet++;
 }
 
 
