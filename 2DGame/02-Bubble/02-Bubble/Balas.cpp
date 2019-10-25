@@ -40,7 +40,7 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 	sprite->setNumberAnimations(3);
 
-	sprite->setAnimationSpeed(SHOOT, 3);
+	sprite->setAnimationSpeed(SHOOT, 35);
 	sprite->addKeyframe(SHOOT, glm::vec2(0.f, 0.0f));
 	sprite->addKeyframe(SHOOT, glm::vec2(0.2f, 0.0f));
 	sprite->addKeyframe(SHOOT, glm::vec2(0.4f, 0.0f));
@@ -98,6 +98,7 @@ void Balas::setPosition(const glm::vec2& pos, glm::ivec2 vel)
 	posPlayer = pos;
 	alive = true;
 	velocitat = vel;
+	sprite->changeAnimation(SHOOT);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
