@@ -42,6 +42,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	right = true;
 	chooseSprite = 1;
 	actualBullet = 0;
+	canShoot = 0;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet2.loadFromFile("images/ShootingStraight+DiagonalDown.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -521,87 +522,49 @@ bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 
 void Player::shoot(const glm::vec2& pos, int angle) 
 {
-	glm::ivec2 velocitat = glm::vec2(0, 0);
-	if (angle == R)
-	{
-		velocitat.x = 5;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
-	}
-	else if (angle == L)
-	{
-		velocitat.x = -5;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x ), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
-	}
-	else if (angle == UP_R)
-	{
-		velocitat.x = 4;
-		velocitat.y = -4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 9), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
+	if (canShoot == 8){
+		glm::ivec2 velocitat = glm::vec2(0, 0);
+		if (angle == R)
+		{
+			velocitat.x = 3;
+			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
+		}
+		else if (angle == L)
+		{
+			velocitat.x = -3;
+			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x ), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
+		}
+		else if (angle == UP_R)
+		{
+			velocitat.x = 2;
+			velocitat.y = -2;
+			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 9), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
 
-	}
-	else if (angle == UP_L)
-	{
-		velocitat.x = -4;
-		velocitat.y = -4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x+3), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
+		}
+		else if (angle == UP_L)
+		{
+			velocitat.x = -2;
+			velocitat.y = -2;
+			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x+3), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
 
+		}
+		else if (angle == DOWN_R)
+		{
+			velocitat.x = 2;
+			velocitat.y = 2;
+			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
+		}
+		else
+		{
+			velocitat.x = -2;
+			velocitat.y = 2;
+			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
+		}
 	}
-	else if (angle == DOWN_R)
-	{
-		velocitat.x = 4;
-		velocitat.y = 4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
-	}
-	else 
-	{
-		velocitat.x = -4;
-		velocitat.y = 4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
-	}
-
+	canShoot++;
 	
-
+	if (canShoot > 8) canShoot = 0;
 
 
 	actualBullet++;
 }
-
-
-/*
-			if (chooseSprite == 1)
-				{
-					if (Game::instance().getKey('w'))
-					{
-						if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT  || sprite->animation() == STAND_SHOOT_DI_U_L || sprite->animation() == STAND_LEFT || sprite->animation() == SHOOT_DI_U_L)
-							sprite->changeAnimation(STAND_SHOOT_DI_U_L);
-						else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT  || sprite->animation() == STAND_SHOOT_DI_U_R || sprite->animation() == STAND_RIGHT || sprite->animation() == SHOOT_DI_U_R)
-							sprite->changeAnimation(STAND_SHOOT_DI_U_R);
-						chooseSprite = 1;
-					}
-					else if (Game::instance().getKey('s'))
-					{
-						if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT || sprite->animation() == STAND_SHOOT_DI_U_L || sprite->animation() == STAND_LEFT)
-							sprite2->changeAnimation(STAND_SHOOT_DI_D_L);
-						else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT || sprite->animation() == STAND_SHOOT_DI_U_R || sprite->animation() == STAND_RIGHT)
-							sprite2->changeAnimation(STAND_SHOOT_DI_D_R);
-						chooseSprite = 2;
-					}
-					else
-					{
-						if (sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT || sprite->animation() == STAND_SHOOT_DI_U_L || sprite->animation() == STAND_LEFT)
-							sprite2->changeAnimation(SHOOT_STAND_S_L);
-						else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT || sprite->animation() == STAND_SHOOT_DI_U_R || sprite->animation() == STAND_RIGHT)
-							sprite2->changeAnimation(SHOOT_STAND_S_R);
-						chooseSprite = 2;
-					}
-				}
-				else if (chooseSprite == 2)
-				{
-					if (sprite2->animation() == SHOOT_DI_D_L || sprite2->animation() == SHOOT_S_L)
-						sprite2->changeAnimation(SHOOT_STAND_S_L);
-					if (sprite2->animation() == SHOOT_DI_D_R || sprite2->animation() == SHOOT_S_R)
-						sprite2->changeAnimation(SHOOT_STAND_S_R);
-
-				}
-				chooseSprite = 2;
-*/
