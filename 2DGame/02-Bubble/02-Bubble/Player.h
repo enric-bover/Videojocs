@@ -40,6 +40,7 @@ private:
 	int chooseSprite;
 	int actualBullet;
 	Balas *bales[50];
+	bool right;
 
 };
 
