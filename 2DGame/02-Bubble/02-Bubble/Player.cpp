@@ -29,6 +29,10 @@ enum PlayerAnims2
 	SHOOT_S_L, SHOOT_S_R, SHOOT_DI_D_L, SHOOT_DI_D_R, SHOOT_STAND_S_L, SHOOT_STAND_S_R, STAND_SHOOT_DI_D_L, STAND_SHOOT_DI_D_R
 };
 
+enum Shooting
+{
+	UP_R, UP_L, R, L, DOWN_R, DOWN_L
+};
 
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
@@ -171,21 +175,21 @@ void Player::update(int deltaTime)
 			{
 				if (Game::instance().getKey('w'))
 				{
-					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_L);
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_L);
 					if (sprite->animation() != SHOOT_DI_U_L)
 						sprite->changeAnimation(SHOOT_DI_U_L);
 					chooseSprite = 1;
 				}
 				else if (Game::instance().getKey('s'))
 				{
-					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_L);
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_L);
 					if (sprite2->animation() != SHOOT_DI_D_L)
 						sprite2->changeAnimation(SHOOT_DI_D_L);
 					chooseSprite = 2;
 				}
 				else
 				{
-					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_L);
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), L);
 					if (sprite2->animation() != SHOOT_S_L)
 						sprite2->changeAnimation(SHOOT_S_L);
 					chooseSprite = 2;
@@ -212,21 +216,21 @@ void Player::update(int deltaTime)
 			{
 				if (Game::instance().getKey('w'))
 				{
-					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_R);
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_R);
 					if (sprite->animation() != SHOOT_DI_U_R)
 						sprite->changeAnimation(SHOOT_DI_U_R);
 					chooseSprite = 1;
 				}
 				else if (Game::instance().getKey('s'))
 				{
-					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_R);
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_R);
 					if (sprite2->animation() != SHOOT_DI_D_R)
 						sprite2->changeAnimation(SHOOT_DI_D_R);
 					chooseSprite = 2;
 				}
 				else
 				{
-					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_R);
+					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), R);
 					if (sprite2->animation() != SHOOT_S_R)
 						sprite2->changeAnimation(SHOOT_S_R);
 					chooseSprite = 2;
@@ -273,19 +277,19 @@ void Player::update(int deltaTime)
 				{
 					if (Game::instance().getKey('w'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_R);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_R);
 						sprite->changeAnimation(STAND_SHOOT_DI_U_R);
 						chooseSprite = 1;
 					}
 					else if (Game::instance().getKey('s'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_R);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_R);
 						sprite2->changeAnimation(STAND_SHOOT_DI_D_R);
 						chooseSprite = 2;
 					}
 					else 
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_R);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), R);
 						sprite2->changeAnimation(SHOOT_STAND_S_R);
 						chooseSprite = 2;
 					}
@@ -295,19 +299,19 @@ void Player::update(int deltaTime)
 				{
 					if (Game::instance().getKey('w'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_L);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_L);
 						sprite->changeAnimation(STAND_SHOOT_DI_U_L);
 						chooseSprite = 1;
 					}
 					else if (Game::instance().getKey('s'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_L);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_L);
 						sprite2->changeAnimation(STAND_SHOOT_DI_D_L);
 						chooseSprite = 2;
 					}
 					else
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_L);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), L);
 						sprite2->changeAnimation(SHOOT_STAND_S_L);
 						chooseSprite = 2;
 					}
@@ -385,15 +389,15 @@ void Player::update(int deltaTime)
 				{
 					if (Game::instance().getKey('w'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_R);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_R);
 					}
 					else if (Game::instance().getKey('s'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_R);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_R);
 					}
 					else
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_R);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), R);
 					}
 				}
 			}
@@ -403,15 +407,15 @@ void Player::update(int deltaTime)
 				{
 					if (Game::instance().getKey('w'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_U_L);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_L);
 					}
 					else if (Game::instance().getKey('s'))
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), STAND_SHOOT_DI_D_L);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_L);
 					}
 					else
 					{
-						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), SHOOT_STAND_S_L);
+						shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), L);
 					}
 				}
 			}
@@ -517,7 +521,45 @@ bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 
 void Player::shoot(const glm::vec2& pos, int angle) 
 {
-	bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 15), float(tileMapDispl.y + posPlayer.y + 11)));
+	glm::ivec2 velocitat = glm::vec2(0, 0);
+	if (angle == R)
+	{
+		velocitat.x = 5;
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
+	}
+	else if (angle == L)
+	{
+		velocitat.x = -5;
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x - 12), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
+	}
+	else if (angle == UP_R)
+	{
+		velocitat.x = 4;
+		velocitat.y = -4;
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 6), float(tileMapDispl.y + posPlayer.y+4)), velocitat);
+
+	}
+	else if (angle == UP_L)
+	{
+		velocitat.x = -4;
+		velocitat.y = -4;
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), velocitat);
+
+	}
+	else if (angle == DOWN_R)
+	{
+		velocitat.x = 4;
+		velocitat.y = 4;
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 22)), velocitat);
+	}
+	else 
+	{
+		velocitat.x = -4;
+		velocitat.y = 4;
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 22)), velocitat);
+	}
+
+	
 
 
 

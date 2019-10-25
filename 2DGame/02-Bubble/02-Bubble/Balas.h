@@ -16,7 +16,7 @@ public:
 	void render();
 
 	void setTileMap(TileMap* tileMap);
-	void setPosition(const glm::vec2& pos);
+	void setPosition(const glm::vec2& pos, glm::ivec2 vel);
 	int getPositionX();
 	int getPositionY();
 	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
@@ -24,7 +24,7 @@ public:
 
 private:
 	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
+	glm::ivec2 tileMapDispl, posPlayer, spriteSize, velocitat;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite* sprite;

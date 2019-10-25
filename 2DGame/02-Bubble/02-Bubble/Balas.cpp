@@ -64,7 +64,8 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 void Balas::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	posPlayer.x += 5;
+	posPlayer.x += velocitat.x;
+	posPlayer.y += velocitat.y;
 	if (sprite->animation()  == SHOOT)
 	{
 		if (sprite->lastKeyFrame())
@@ -73,7 +74,8 @@ void Balas::update(int deltaTime)
 
 	if (alive)
 	{
-		posPlayer.x += 5;
+		posPlayer.x += velocitat.x;
+		posPlayer.y += velocitat.y;
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -91,10 +93,11 @@ void Balas::setTileMap(TileMap* tileMap)
 	map = tileMap;
 }
 
-void Balas::setPosition(const glm::vec2& pos)
+void Balas::setPosition(const glm::vec2& pos, glm::ivec2 vel)
 {
 	posPlayer = pos;
 	alive = true;
+	velocitat = vel;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
