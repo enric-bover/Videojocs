@@ -43,6 +43,7 @@ private:
 	int actualBullet;
 	Balas *bales[50];
 	bool right;
+	int canShoot;
 	
 
 };
