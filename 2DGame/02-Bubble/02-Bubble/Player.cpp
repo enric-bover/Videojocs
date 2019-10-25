@@ -525,38 +525,38 @@ void Player::shoot(const glm::vec2& pos, int angle)
 	if (angle == R)
 	{
 		velocitat.x = 5;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
 	}
 	else if (angle == L)
 	{
 		velocitat.x = -5;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x - 12), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x ), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
 	}
 	else if (angle == UP_R)
 	{
 		velocitat.x = 4;
 		velocitat.y = -4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 6), float(tileMapDispl.y + posPlayer.y+4)), velocitat);
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 9), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
 
 	}
 	else if (angle == UP_L)
 	{
 		velocitat.x = -4;
 		velocitat.y = -4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), velocitat);
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x+3), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
 
 	}
 	else if (angle == DOWN_R)
 	{
 		velocitat.x = 4;
 		velocitat.y = 4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 22)), velocitat);
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
 	}
 	else 
 	{
 		velocitat.x = -4;
 		velocitat.y = 4;
-		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 22)), velocitat);
+		bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
 	}
 
 	
