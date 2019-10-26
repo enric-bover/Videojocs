@@ -136,10 +136,10 @@ bool Balas::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 	if (this->alive)
 	{
 		int xEnemie1, xEnemie2, yEnemie1, yEnemie2;
-		xEnemie1 = posEnemie.x + 4;
-		xEnemie2 = xEnemie1 + sizeTile.x - 2;
-		yEnemie1 = posEnemie.y + 2;
-		yEnemie2 = yEnemie1 + sizeTile.y - 2;
+		xEnemie1 = posEnemie.x +6;
+		xEnemie2 = xEnemie1 + sizeTile.x - 6;
+		yEnemie1 = posEnemie.y;
+		yEnemie2 = yEnemie1 + sizeTile.y;
 		//mirar primer si la posicio x1 del player es troba entre les del enemic, x2 player entre x del enemic
 		//o com l'sprite del player es mes gran mirar si x1 < x1 enemie i x2 > x2 enemie
 		if (((posPlayer.x >= xEnemie1) && (posPlayer.x <= xEnemie2)) || (((posPlayer.x + spriteSize.x) >= xEnemie1) && ((posPlayer.x + spriteSize.x) <= xEnemie2)) || ((posPlayer.x <= xEnemie1) && ((posPlayer.x + spriteSize.x) >= xEnemie2)))

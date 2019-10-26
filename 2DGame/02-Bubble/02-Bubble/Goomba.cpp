@@ -24,26 +24,25 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	hp = 3;
 	dead = false;
 	direction = MOVE_LEFT;
-	spriteSize = glm::ivec2(17, 20);
+	spriteSize = glm::ivec2(18, 18);
 	spritesheet.loadFromFile("images/goombaTiles2.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1429, 1.0), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1667, 1.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 8);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.1429, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.1667, 0.0f));
 
 	sprite->setAnimationSpeed(MOVE_RIGHT, 8);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.1429, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.1667, 0.0f));
 
 
 	sprite->setAnimationSpeed(DIE, 15);
-	sprite->addKeyframe(DIE, glm::vec2(0.2857f, 0.0f));
-	sprite->addKeyframe(DIE, glm::vec2(0.4286f, 0.0f));
-	sprite->addKeyframe(DIE, glm::vec2(0.5714f, 0.0f));
-	sprite->addKeyframe(DIE, glm::vec2(0.7143f, 0.0f));
-	sprite->addKeyframe(DIE, glm::vec2(0.8571f, 0.0f));
+	sprite->addKeyframe(DIE, glm::vec2(0.3333f, 0.0f));
+	sprite->addKeyframe(DIE, glm::vec2(0.5f, 0.0f));
+	sprite->addKeyframe(DIE, glm::vec2(0.6667f, 0.0f));
+	sprite->addKeyframe(DIE, glm::vec2(0.8333f, 0.0f));
 
 
 	sprite->changeAnimation(MOVE_LEFT);
@@ -61,12 +60,12 @@ void Goomba::update(int deltaTime)
 		dead = true;
 	if (hp > 0) {
 		posPlayer.y += FALL_STEP;
-		bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(17, 20), &posPlayer.y);
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(17, 20)))
+		bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+		if (map->collisionMoveLeft(posPlayer, spriteSize))
 		{
 			direction = MOVE_RIGHT;
 		}
-		else if (map->collisionMoveRight(posPlayer, glm::ivec2(17, 20)))
+		else if (map->collisionMoveRight(posPlayer, spriteSize))
 		{
 			direction = MOVE_LEFT;
 		}
