@@ -32,6 +32,7 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	bJumping = false;
 	alive = false;
+	hit = false;
 	spritesheet.loadFromFile("images/Bullets.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	spriteSize = glm::ivec2(8, 8);
@@ -40,7 +41,7 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 	sprite->setNumberAnimations(3);
 
-	sprite->setAnimationSpeed(SHOOT, 25);
+	sprite->setAnimationSpeed(SHOOT, 15);
 	sprite->addKeyframe(SHOOT, glm::vec2(0.f, 0.0f));
 	sprite->addKeyframe(SHOOT, glm::vec2(0.2f, 0.0f));
 	sprite->addKeyframe(SHOOT, glm::vec2(0.4f, 0.0f));
@@ -49,7 +50,9 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	sprite->setAnimationSpeed(FLY, 3);
 	sprite->addKeyframe(FLY, glm::vec2(0.6f, 0.0f));
 
-	sprite->setAnimationSpeed(HIT, 3);
+	sprite->setAnimationSpeed(HIT, 25);
+	sprite->addKeyframe(HIT, glm::vec2(0.8f, 0.0f));
+	sprite->addKeyframe(HIT, glm::vec2(0.8f, 0.0f));
 	sprite->addKeyframe(HIT, glm::vec2(0.8f, 0.0f));
 
 
@@ -64,8 +67,8 @@ void Balas::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 void Balas::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	posPlayer.x += velocitat.x;
-	posPlayer.y += velocitat.y;
+	//posPlayer.x += velocitat.x;
+	//posPlayer.y += velocitat.y;
 	if (sprite->animation()  == SHOOT)
 	{
 		if (sprite->lastKeyFrame())
@@ -74,8 +77,14 @@ void Balas::update(int deltaTime)
 
 	if (alive)
 	{
-		posPlayer.x += velocitat.x;
-		posPlayer.y += velocitat.y;
+		posPlayer.x += 1.5*velocitat.x;
+		posPlayer.y += 1.5*velocitat.y;
+	}
+	
+	if(this->hit)
+	{
+		if(sprite->animation() != HIT)
+			sprite->changeAnimation(HIT);
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -85,7 +94,16 @@ void Balas::update(int deltaTime)
 
 void Balas::render()
 {
-	sprite->render();
+	if ((sprite->animation() == HIT) && (sprite->lastKeyFrame()))
+	{
+		this->hit = false;
+	}
+	if (this->hit || this ->alive)
+	{
+		sprite->render();
+	}
+
+	
 }
 
 void Balas::setTileMap(TileMap* tileMap)
@@ -112,25 +130,29 @@ int Balas::getPositionY()
 	return posPlayer.y;
 }
 
-bool Balas::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
+bool Balas::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 {
 	//hago el tamaño de colision mas pequeño para que no se note tanto que tenemos pixeles vacios delante del sprite del player
-	int xEnemie1, xEnemie2, yEnemie1, yEnemie2;
-	xEnemie1 = posEnemie.x + 4;
-	xEnemie2 = xEnemie1 + sizeTile.x - 2;
-	yEnemie1 = posEnemie.y + 2;
-	yEnemie2 = yEnemie1 + sizeTile.y - 2;
-	//mirar primer si la posicio x1 del player es troba entre les del enemic, x2 player entre x del enemic
-	//o com l'sprite del player es mes gran mirar si x1 < x1 enemie i x2 > x2 enemie
-	if (((posPlayer.x >= xEnemie1) && (posPlayer.x <= xEnemie2)) || (((posPlayer.x + spriteSize.x) >= xEnemie1) && ((posPlayer.x + spriteSize.x) <= xEnemie2)) || ((posPlayer.x <= xEnemie1) && ((posPlayer.x + spriteSize.x) >= xEnemie2)))
+	if (this->alive)
 	{
-		if (((posPlayer.y >= yEnemie1) && (posPlayer.y <= yEnemie2)) || (((posPlayer.y + spriteSize.y) >= yEnemie1) && ((posPlayer.y + spriteSize.y) <= yEnemie2)) || ((posPlayer.y <= yEnemie1) && ((posPlayer.y + spriteSize.y) >= yEnemie2)))
+		int xEnemie1, xEnemie2, yEnemie1, yEnemie2;
+		xEnemie1 = posEnemie.x + 4;
+		xEnemie2 = xEnemie1 + sizeTile.x - 2;
+		yEnemie1 = posEnemie.y + 2;
+		yEnemie2 = yEnemie1 + sizeTile.y - 2;
+		//mirar primer si la posicio x1 del player es troba entre les del enemic, x2 player entre x del enemic
+		//o com l'sprite del player es mes gran mirar si x1 < x1 enemie i x2 > x2 enemie
+		if (((posPlayer.x >= xEnemie1) && (posPlayer.x <= xEnemie2)) || (((posPlayer.x + spriteSize.x) >= xEnemie1) && ((posPlayer.x + spriteSize.x) <= xEnemie2)) || ((posPlayer.x <= xEnemie1) && ((posPlayer.x + spriteSize.x) >= xEnemie2)))
 		{
-			alive = false;
-			return true;
+			if (((posPlayer.y >= yEnemie1) && (posPlayer.y <= yEnemie2)) || (((posPlayer.y + spriteSize.y) >= yEnemie1) && ((posPlayer.y + spriteSize.y) <= yEnemie2)) || ((posPlayer.y <= yEnemie1) && ((posPlayer.y + spriteSize.y) >= yEnemie2)))
+			{
+				this->hit = true;
+				this->alive = false;
+				return true;
+			}
 		}
 	}
-	alive = true;
+
 	return false;
 
 }

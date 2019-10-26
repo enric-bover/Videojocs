@@ -19,7 +19,7 @@ public:
 	void setPosition(const glm::vec2& pos, glm::ivec2 vel);
 	int getPositionX();
 	int getPositionY();
-	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
+	bool kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 	bool isAlive();
 
 private:
@@ -30,7 +30,7 @@ private:
 	Sprite* sprite;
 	Sprite* sprite2;
 	TileMap* map;
-	bool alive;
+	bool alive, hit;
 
 };
 

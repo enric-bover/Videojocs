@@ -171,6 +171,7 @@ void Player::update(int deltaTime)
 	if (!bJumping) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
+			posPlayer.x -= int(SPEED * deltaTime);
 			right = false;
 			if (Game::instance().getKey(' '))		//dispares
 			{
@@ -202,7 +203,7 @@ void Player::update(int deltaTime)
 					sprite->changeAnimation(MOVE_LEFT);
 				chooseSprite = 1;
 			}
-			posPlayer.x -= int(SPEED * deltaTime);
+			
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
 			{
 				posPlayer.x += int(SPEED * deltaTime);
@@ -212,6 +213,7 @@ void Player::update(int deltaTime)
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{
+			posPlayer.x += int(SPEED * deltaTime);
 			right = true;
 			if (Game::instance().getKey(' '))		//dispares
 			{
@@ -244,7 +246,6 @@ void Player::update(int deltaTime)
 				chooseSprite = 1;
 
 			}
-			posPlayer.x += int(SPEED * deltaTime);
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
 			{
 				posPlayer.x -= int(SPEED * deltaTime);
@@ -444,8 +445,7 @@ void Player::update(int deltaTime)
 
 	for (int i = 0; i < 50; i++)
 	{
-		if (bales[i]->isAlive())
-			bales[i]->update(deltaTime);
+		bales[i]->update(deltaTime);
 	}
 }
 
@@ -457,10 +457,7 @@ void Player::render()
 		sprite2->render();
 	for (int i = 0; i < 50; i++)
 	{
-		if (bales[i]->isAlive())
-		{
-			bales[i]->render();
-		}
+		bales[i]->render();
 
 	}
 }
@@ -510,9 +507,9 @@ bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 
 bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile) 
 {
-	for (int i = 0; i < 10; i++) 
+	for (int i = 0; i < 50; i++) 
 	{
-		if (bales[i]->dies(posEnemie, sizeTile))
+		if (bales[i]->kills(posEnemie, sizeTile))
 		{
 			return true;
 		}
