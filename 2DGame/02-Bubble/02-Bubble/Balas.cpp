@@ -77,8 +77,8 @@ void Balas::update(int deltaTime)
 
 	if (alive)
 	{
-		posPlayer.x += 1.5*velocitat.x;
-		posPlayer.y += 1.5*velocitat.y;
+		posPlayer.x += 2*velocitat.x;
+		posPlayer.y += 2*velocitat.y;
 	}
 	
 	if(this->hit)

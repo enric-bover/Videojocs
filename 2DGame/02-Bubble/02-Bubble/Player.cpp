@@ -166,7 +166,8 @@ void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	sprite2->update(deltaTime);
-
+	if (canShoot < 10)
+		canShoot++;
 	if (actualBullet == 50) actualBullet = 0;
 	if (!bJumping) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
@@ -519,7 +520,7 @@ bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 
 void Player::shoot(const glm::vec2& pos, int angle) 
 {
-	if (canShoot == 8){
+	if (canShoot >= 10){
 		glm::ivec2 velocitat = glm::vec2(0, 0);
 		if (angle == R)
 		{
@@ -557,11 +558,12 @@ void Player::shoot(const glm::vec2& pos, int angle)
 			velocitat.y = 2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
 		}
+		canShoot = 0;
+		actualBullet++;
 	}
-	canShoot++;
 	
-	if (canShoot > 8) canShoot = 0;
 
 
-	actualBullet++;
+
+	
 }

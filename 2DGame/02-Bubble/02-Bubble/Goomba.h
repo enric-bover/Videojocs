@@ -37,6 +37,7 @@ private:
 	TileMap* map;
 	int hp;
 	int direction;
+	bool dead;
 
 };
 
