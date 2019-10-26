@@ -38,7 +38,7 @@ void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.1429, 0.0f));
 
 
-	sprite->setAnimationSpeed(DIE, 8);
+	sprite->setAnimationSpeed(DIE, 15);
 	sprite->addKeyframe(DIE, glm::vec2(0.2857f, 0.0f));
 	sprite->addKeyframe(DIE, glm::vec2(0.4286f, 0.0f));
 	sprite->addKeyframe(DIE, glm::vec2(0.5714f, 0.0f));
