@@ -183,6 +183,11 @@ void Player::update(int deltaTime)
 					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_L);
 					if (sprite->animation() != SHOOT_DI_U_L)
 						sprite->changeAnimation(SHOOT_DI_U_L);
+					if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
+					{
+						sprite->changeAnimation(STAND_SHOOT_DI_U_L);
+						posPlayer.x += int(SPEED * deltaTime);
+					}
 					chooseSprite = 1;
 				}
 				else if (Game::instance().getKey('s'))
@@ -190,6 +195,11 @@ void Player::update(int deltaTime)
 					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_L);
 					if (sprite2->animation() != SHOOT_DI_D_L)
 						sprite2->changeAnimation(SHOOT_DI_D_L);
+					if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
+					{
+						sprite2->changeAnimation(STAND_SHOOT_DI_D_L);
+						posPlayer.x += int(SPEED * deltaTime);
+					}
 					chooseSprite = 2;
 				}
 				else
@@ -197,6 +207,11 @@ void Player::update(int deltaTime)
 					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), L);
 					if (sprite2->animation() != SHOOT_S_L)
 						sprite2->changeAnimation(SHOOT_S_L);
+					if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
+					{
+						sprite2->changeAnimation(SHOOT_STAND_S_L);
+						posPlayer.x += int(SPEED * deltaTime);
+					}
 					chooseSprite = 2;
 				}
 			}
@@ -204,14 +219,13 @@ void Player::update(int deltaTime)
 			{
 				if (sprite->animation() != MOVE_LEFT)
 					sprite->changeAnimation(MOVE_LEFT);
+				if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x += int(SPEED * deltaTime);
+					sprite->changeAnimation(STAND_LEFT);
+				}
 				chooseSprite = 1;
-			}
-			
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(20, 35)))
-			{
-				posPlayer.x += int(SPEED * deltaTime);
-				sprite->changeAnimation(STAND_LEFT);
-				chooseSprite = 1;
+
 			}
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
@@ -225,6 +239,11 @@ void Player::update(int deltaTime)
 					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP_R);
 					if (sprite->animation() != SHOOT_DI_U_R)
 						sprite->changeAnimation(SHOOT_DI_U_R);
+					if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+					{
+						sprite->changeAnimation(STAND_SHOOT_DI_U_R);
+						posPlayer.x -= int(SPEED * deltaTime);
+					}
 					chooseSprite = 1;
 				}
 				else if (Game::instance().getKey('s'))
@@ -232,6 +251,11 @@ void Player::update(int deltaTime)
 					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), DOWN_R);
 					if (sprite2->animation() != SHOOT_DI_D_R)
 						sprite2->changeAnimation(SHOOT_DI_D_R);
+					if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+					{
+						sprite2->changeAnimation(STAND_SHOOT_DI_D_R);
+						posPlayer.x -= int(SPEED * deltaTime);
+					}
 					chooseSprite = 2;
 				}
 				else
@@ -239,6 +263,11 @@ void Player::update(int deltaTime)
 					shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), R);
 					if (sprite2->animation() != SHOOT_S_R)
 						sprite2->changeAnimation(SHOOT_S_R);
+					if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+					{
+						sprite2->changeAnimation(SHOOT_STAND_S_R);
+						posPlayer.x -= int(SPEED * deltaTime);
+					}
 					chooseSprite = 2;
 				}
 			}
@@ -246,13 +275,11 @@ void Player::update(int deltaTime)
 			{
 				if (sprite->animation() != MOVE_RIGHT)
 					sprite->changeAnimation(MOVE_RIGHT);
-				chooseSprite = 1;
-
-			}
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
-			{
-				posPlayer.x -= int(SPEED * deltaTime);
-				sprite->changeAnimation(STAND_RIGHT);
+				if (map->collisionMoveRight(posPlayer, glm::ivec2(20, 35)))
+				{
+					posPlayer.x -= int(SPEED * deltaTime);
+					sprite->changeAnimation(STAND_RIGHT);
+				}
 				chooseSprite = 1;
 			}
 		}
@@ -525,20 +552,23 @@ bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 
 void Player::shoot(const glm::vec2& pos, int angle) 
 {
+	bool up = false;
+	bool down = false;
 	if (canShoot >= FRAME_SHOOT){
 		glm::ivec2 velocitat = glm::vec2(0, 0);
 		if (angle == R)
 		{
-			velocitat.x = 3;
+			velocitat.x = 2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
 		}
 		else if (angle == L)
 		{
-			velocitat.x = -3;
+			velocitat.x = -2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x ), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
 		}
 		else if (angle == UP_R)
 		{
+			up = true;
 			velocitat.x = 2;
 			velocitat.y = -2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 9), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
@@ -546,6 +576,7 @@ void Player::shoot(const glm::vec2& pos, int angle)
 		}
 		else if (angle == UP_L)
 		{
+			up = true;
 			velocitat.x = -2;
 			velocitat.y = -2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x+3), float(tileMapDispl.y + posPlayer.y+1)), velocitat);
@@ -553,12 +584,14 @@ void Player::shoot(const glm::vec2& pos, int angle)
 		}
 		else if (angle == DOWN_R)
 		{
+			down = true;
 			velocitat.x = 2;
 			velocitat.y = 2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
 		}
 		else
 		{
+			down = true;
 			velocitat.x = -2;
 			velocitat.y = 2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
@@ -573,10 +606,21 @@ void Player::shoot(const glm::vec2& pos, int angle)
 			for (int i = 0; i < extraBullets; i++)
 			{
 				glm::ivec2 velocitat2 = velocitat;
-				if ((rand() % 2) == 1)
-					velocitat2.y -= rand() % 3;
+				if (up)
+				{
+					velocitat2.y -= (rand() % 3) - 1;
+				}
+				else if (down)
+				{
+					velocitat2.y += (rand() % 3) - 1;
+				}
 				else
-					velocitat2.y += rand() % 3;
+				{
+					if ((rand() % 2) == 1)
+						velocitat2.y -= (rand() % 3);
+					else
+						velocitat2.y += (rand() % 3);
+				}
 				bales[actualBullet + i]->setPosition(actualPos, velocitat2);
 			}
 			actualBullet += extraBullets;
