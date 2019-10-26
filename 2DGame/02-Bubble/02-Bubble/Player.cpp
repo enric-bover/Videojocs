@@ -12,6 +12,7 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
 #define SPEED 0.12
+#define FRAME_SHOOT 20
 
 //DI: diagonal
 //U: up
@@ -43,13 +44,14 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	chooseSprite = 1;
 	actualBullet = 0;
 	canShoot = 0;
+	tripleshoot = false;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet2.loadFromFile("images/ShootingStraight+DiagonalDown.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	spriteSize = glm::ivec2(20, 35);
 	spriteSize2 = glm::ivec2(25, 35);
 
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < NUM_BALES; i++)
 	{
 		bales[i] = new Balas();
 		bales[i]->init(tileMapPos, shaderProgram);
@@ -166,9 +168,9 @@ void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	sprite2->update(deltaTime);
-	if (canShoot < 10)
+	if (canShoot < FRAME_SHOOT)
 		canShoot++;
-	if (actualBullet == 50) actualBullet = 0;
+	if (actualBullet >= NUM_BALES - 5) actualBullet = 0;
 	if (!bJumping) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
@@ -439,12 +441,15 @@ void Player::update(int deltaTime)
 		chooseSprite = 1;
 	}
 	
-
+	if (Game::instance().getKey('t'))
+	{
+		tripleshoot = true;
+	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < NUM_BALES; i++)
 	{
 		bales[i]->update(deltaTime);
 	}
@@ -456,7 +461,7 @@ void Player::render()
 		sprite->render();
 	else
 		sprite2->render();
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < NUM_BALES; i++)
 	{
 		bales[i]->render();
 
@@ -508,7 +513,7 @@ bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 
 bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile) 
 {
-	for (int i = 0; i < 50; i++) 
+	for (int i = 0; i < NUM_BALES; i++)
 	{
 		if (bales[i]->kills(posEnemie, sizeTile))
 		{
@@ -520,7 +525,7 @@ bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 
 void Player::shoot(const glm::vec2& pos, int angle) 
 {
-	if (canShoot >= 10){
+	if (canShoot >= FRAME_SHOOT){
 		glm::ivec2 velocitat = glm::vec2(0, 0);
 		if (angle == R)
 		{
@@ -559,7 +564,23 @@ void Player::shoot(const glm::vec2& pos, int angle)
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
 		}
 		canShoot = 0;
-		actualBullet++;
+		actualBullet += 1;
+
+		if (tripleshoot)
+		{
+			glm::vec2 actualPos = glm::vec2(bales[actualBullet - 1]->getPositionX(), bales[actualBullet - 1]->getPositionY());
+			int extraBullets = rand() % 4 + 1;
+			for (int i = 0; i < extraBullets; i++)
+			{
+				glm::ivec2 velocitat2 = velocitat;
+				if ((rand() % 2) == 1)
+					velocitat2.y -= rand() % 3;
+				else
+					velocitat2.y += rand() % 3;
+				bales[actualBullet + i]->setPosition(actualPos, velocitat2);
+			}
+			actualBullet += extraBullets;
+		}
 	}
 	
 

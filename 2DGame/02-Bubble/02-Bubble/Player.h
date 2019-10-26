@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Balas.h"
+#define NUM_BALES 90
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -41,9 +42,10 @@ private:
 	bool dead;
 	int chooseSprite;
 	int actualBullet;
-	Balas *bales[50];
+	Balas *bales[90];
 	bool right;
 	int canShoot;
+	bool tripleshoot;
 	
 
 };
