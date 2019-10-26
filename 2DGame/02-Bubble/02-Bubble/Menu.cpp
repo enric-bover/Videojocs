@@ -21,7 +21,7 @@
 #define SCREEN_INSTRUCTIONS 1
 #define SCREEN_CREDITS 2
 
-#define LIMIT_TIMER 100
+#define LIMIT_TIMER 75
 
 Menu::Menu()
 {
@@ -68,10 +68,8 @@ void Menu::init()
 int Menu::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	if (startTimer && timer < LIMIT_TIMER) {
-		timer += deltaTime;
+	if (startTimer && (timer += deltaTime) < LIMIT_TIMER)
 		return 0;
-	}
 	startTimer = false;
 	timer = 0.0f;
 	if (currentScreen == SCREEN_MENU) {
@@ -79,12 +77,12 @@ int Menu::update(int deltaTime)
 		if (Game::instance().getSpecialKey(0x67)) {
 			selectedOption = (++selectedOption) % 4;
 		}
-		else if (Game::instance().getSpecialKey(0x65))
+		if (Game::instance().getSpecialKey(0x65))
 		{
 			selectedOption = (--selectedOption);
 			if (selectedOption < OP_PLAY) selectedOption = OP_EXIT;
 		}
-		else if (Game::instance().getKey(13)) {
+		if (Game::instance().getKey(13)) {
 			if (selectedOption == OP_EXIT) return -1;
 			else if (selectedOption == OP_PLAY) return 1;
 			currentScreen = selectedOption;

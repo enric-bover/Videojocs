@@ -43,7 +43,7 @@ private:
 	int level;
 	int lives;
 	// Text textLifes;
-	bool frontalCamera;
+	int cameraState;
 
 };
 

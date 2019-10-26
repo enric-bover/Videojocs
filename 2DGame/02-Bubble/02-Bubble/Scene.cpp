@@ -14,6 +14,10 @@
 #define INIT_PLAYER_X_TILES 3
 #define INIT_PLAYER_Y_TILES 10
 
+#define SIDE_SCROLLER 0
+#define FRONTAL 1
+#define ZOOM 2
+
 Scene::Scene()
 {
 	map = NULL;
@@ -21,7 +25,7 @@ Scene::Scene()
 	first = true;
 	level = 1;
 	lives = 5;
-	frontalCamera = false;
+	cameraState = SIDE_SCROLLER;
 }
 
 Scene::~Scene()
@@ -41,6 +45,7 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 	cameraX = 0.0f;
+
 
 	/*// Select which font you want to use
 	if (!textLives.init("fonts/OpenSans-Regular.ttf"))
@@ -72,7 +77,7 @@ int Scene::update(int deltaTime)
 			}
 		}
 	}
-
+	
 	if (player->getPositionX() >= 192 * (map->getTileSize()))
 	{
 		level++;
@@ -90,6 +95,8 @@ void Scene::render()
 
 	texProgram.use();
 	projection = glm::ortho(cameraX, cameraX + float(CAMERA_WIDTH), float(CAMERA_HEIGHT), 0.f);
+	if (cameraState == ZOOM) 
+		projection = glm::ortho(cameraX, cameraX + float(CAMERA_WIDTH), float(CAMERA_HEIGHT) - cameraX, 0.f - cameraX);
 
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -143,8 +150,14 @@ void Scene::initShaders()
 void Scene::updateCamera(int deltaTime)
 {
 	float playerX = float(player->getPositionX());
-	if (playerX < CAMERA_WIDTH / 5 || frontalCamera)
+	if (level == 2 && cameraState == ZOOM)
+	{
+		cameraX = (map->getPosIniY() - player->getPositionY())/10;
+		// ==acabar con el zoom
+	}
+	else if (playerX < CAMERA_WIDTH / 5 || cameraState == FRONTAL) {
 		cameraX = 0;
+	}
 	else if (playerX < map->getMapWidth() - 3 * CAMERA_WIDTH / 5)
 	{
 		if (playerX - cameraX < CAMERA_WIDTH / 5)
@@ -163,13 +176,13 @@ void Scene::loadLevel(int lvl)
 	setPlayerIniPos();
 	//if (level == 1) loadEnemies1();
 	loadEnemies1();
-	if (lvl == 2) frontalCamera = true;
-	else frontalCamera = false;
+	if (lvl == 2) cameraState = FRONTAL;
+	else cameraState = SIDE_SCROLLER;
 }
 
 void Scene::loadEnemies1()
 {
-	//Si lo pones en un fichero loadEnemies(int lvl) "/enemies" + to_string(lvl) + ".txt"
+	//Si lo pones en un fichero loadEnemies(int lvl) "levels/enemies" + to_string(lvl) + ".txt"
 	/*
 	ENEMIES
 		20				-- number of goombas
