@@ -1,16 +1,16 @@
-#ifndef _BLOCK_INTERROGANTE_INCLUDE
-#define _BLOCK_INTERROGANTE_INCLUDE
+#ifndef _SPREAD_GUN_BUFF_INCLUDE
+#define _SPREAD_GUN_BUFF_INCLUDE
 
 #include "Sprite.h"
 #include "TileMap.h"
-#include "spreadGunBuff.h"
 
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
 
 
-class block_interrogante
+class spreadGunBuff
+
 {
 
 public:
@@ -29,6 +29,7 @@ public:
 
 private:
 	bool bJumping;
+	int start;
 	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
 	int jumpAngle, startY;
 	Texture spritesheet;
@@ -38,7 +39,7 @@ private:
 	int hp;
 	int direction;
 	bool dead;
-	spreadGunBuff* buff;
+
 };
 
 #endif

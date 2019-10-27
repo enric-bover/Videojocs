@@ -538,6 +538,7 @@ bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 	
 }
 
+
 bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile) 
 {
 	for (int i = 0; i < NUM_BALES; i++)

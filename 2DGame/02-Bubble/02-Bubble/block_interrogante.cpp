@@ -1,9 +1,11 @@
-#include "block_interrogante.h"
 #include <cmath>
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
+#include "block_interrogante.h"
+#include "spreadGunBuff.h"
+
 
 
 #define JUMP_ANGLE_STEP 4
@@ -21,6 +23,8 @@ enum BlockAnimations
 void block_interrogante::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	hp = 1;
+	buff = new spreadGunBuff;
+	buff->init(tileMapPos, shaderProgram);
 	spriteSize = glm::ivec2(16, 16);
 	spritesheet.loadFromFile("images/bloque_interrogante.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.2f, 1.0f), &spritesheet, &shaderProgram);
@@ -33,7 +37,7 @@ void block_interrogante::init(const glm::ivec2& tileMapPos, ShaderProgram& shade
 	sprite->addKeyframe(ALIVE, glm::vec2(0.6f, 0.0f));
 
 	sprite->setAnimationSpeed(DEAD, 8);
-	sprite->addKeyframe(ALIVE, glm::vec2(0.8f, 0.0f));
+	sprite->addKeyframe(DEAD, glm::vec2(0.8f, 0.0f));
 
 	sprite->changeAnimation(ALIVE);
 	tileMapDispl = tileMapPos;
@@ -46,12 +50,11 @@ void block_interrogante::update(int deltaTime)
 {
 
 	sprite->update(deltaTime);
+	buff->update(deltaTime);
 	if (hp <= 0)
 	{
-		if (sprite->animation() != DEAD)
 			sprite->changeAnimation(DEAD);
 	}
-
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
 }
@@ -59,10 +62,12 @@ void block_interrogante::update(int deltaTime)
 void block_interrogante::render()
 {
 		sprite->render();
+		buff->render();
 }
 
 void block_interrogante::setTileMap(TileMap* tileMap)
 {
+	buff->setTileMap(tileMap);
 	map = tileMap;
 }
 
@@ -70,6 +75,7 @@ void block_interrogante::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	buff->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x - 4), float(tileMapDispl.y + posPlayer.y - 16)));
 }
 
 int block_interrogante::getPositionX()
@@ -94,5 +100,6 @@ bool block_interrogante::isDead()
 
 void block_interrogante::damage()
 {
+	buff->damage();
 	hp--;
 }

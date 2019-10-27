@@ -67,12 +67,12 @@ int Scene::update(int deltaTime)
 					setPlayerIniPos();
 				}
 				if (player->kills(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
-				{
 					goomba[i]->damage();
-				}
 			}
 		}
 	}
+	if (player->dies(glm::ivec2(interrogante->getPositionX(), interrogante->getPositionY()), interrogante->getSpriteSize()))
+		interrogante->damage();
 
 	if (player->getPositionX() >= 192 * (map->getTileSize()))
 	{
