@@ -8,6 +8,8 @@
 #include "Player.h"
 #include "Goomba.h"
 #include "TexturedQuad.h"
+#include "Sphere.h"
+#include "Explosion.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -30,6 +32,9 @@ private:
 	void loadLevel(int lvl);
 	void loadEnemies(int lvl);
 	void setPlayerIniPos();
+	bool goalState1();
+	bool goalState2();
+	bool goalState3();
 
 private:
 	TileMap *map;
@@ -41,13 +46,14 @@ private:
 	glm::mat4 projection;
 	float cameraX;
 	int level;
-	int lives;
 	// Text textLifes;
 	int cameraState;
 	// level 2 
-	TexturedQuad* fire;
-	Texture image;
-
+	TexturedQuad* bgS2, *fireBar;
+	Texture imageBgS2, imageFireBar;
+	Sphere* sphere;
+	float cineTimer;
+	Explosion *explosion;
 
 };
 

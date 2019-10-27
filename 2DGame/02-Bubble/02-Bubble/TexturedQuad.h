@@ -20,6 +20,7 @@ public:
 	void free();
 	void setPosition(const glm::vec2& pos);
 
+
 private:
 	GLuint vao;
 	GLuint vbo;

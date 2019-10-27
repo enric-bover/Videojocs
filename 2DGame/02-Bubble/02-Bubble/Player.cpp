@@ -30,9 +30,14 @@ enum PlayerAnims2
 	SHOOT_S_L, SHOOT_S_R, SHOOT_DI_D_L, SHOOT_DI_D_R, SHOOT_STAND_S_L, SHOOT_STAND_S_R, STAND_SHOOT_DI_D_L, STAND_SHOOT_DI_D_R
 };
 
+enum PlayerAnims3
+{
+	F_STAND, F_DOWN, F_RUN_UP, F_MOVE_L, F_MOVE_R
+};
+
 enum Shooting
 {
-	UP_R, UP_L, R, L, DOWN_R, DOWN_L
+	UP_R, UP_L, R, L, DOWN_R, DOWN_L, UP
 };
 
 
@@ -45,11 +50,16 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	actualBullet = 0;
 	canShoot = 0;
 	tripleshoot = false;
+	frontal = false;
+	runUp = false;
+	round = 0;
 	spritesheet.loadFromFile("images/tiles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheet2.loadFromFile("images/ShootingStraight+DiagonalDown.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet3.loadFromFile("images/sprites_player_lvl2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	spriteSize = glm::ivec2(20, 35);
 	spriteSize2 = glm::ivec2(25, 35);
+	spriteSize3 = glm::ivec2(20, 44);
 
 	for (int i = 0; i < NUM_BALES; i++)
 	{
@@ -63,6 +73,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	
 	sprite2 = Sprite::createSprite(spriteSize2, glm::vec2(0.1667, 0.5), &spritesheet2, &shaderProgram);
 	sprite2->setNumberAnimations(8);
+
+	sprite3 = Sprite::createSprite(spriteSize3, glm::vec2(0.1667, 0.5), &spritesheet3, &shaderProgram);
+	sprite3->setNumberAnimations(5);
 
 	sprite->setAnimationSpeed(STAND_RIGHT, 8);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.0f));
@@ -152,13 +165,36 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite2->addKeyframe(SHOOT_DI_D_L, glm::vec2(0.6667f, 0.5f));
 	sprite2->addKeyframe(SHOOT_DI_D_L, glm::vec2(0.8333f, 0.5f));
 
+	//-------------------------------------------------------- THIRD SPRITE CHARGE
+	sprite3->setAnimationSpeed(F_STAND, 8);
+	sprite3->addKeyframe(F_STAND, glm::vec2(0.0f, 0.0f));
+
+	sprite3->setAnimationSpeed(F_DOWN, 8);
+	sprite3->addKeyframe(F_DOWN, glm::vec2(0.1667f, 0.0f));
+
+	sprite3->setAnimationSpeed(F_RUN_UP, 10);
+	sprite3->addKeyframe(F_RUN_UP, glm::vec2(0.3333f, 0.0f));
+	sprite3->addKeyframe(F_RUN_UP, glm::vec2(0.5f, 0.0f));
+	
+	sprite3->setAnimationSpeed(F_MOVE_L, 8);
+	sprite3->addKeyframe(F_MOVE_L, glm::vec2(0.3333f, 0.5f));
+	sprite3->addKeyframe(F_MOVE_L, glm::vec2(0.1667f, 0.5f));
+	sprite3->addKeyframe(F_MOVE_L, glm::vec2(0.0000f, 0.5f));
+
+	sprite3->setAnimationSpeed(F_MOVE_R, 8);
+	sprite3->addKeyframe(F_MOVE_R, glm::vec2(0.5f, 0.5f));
+	sprite3->addKeyframe(F_MOVE_R, glm::vec2(0.6667f, 0.5f));
+	sprite3->addKeyframe(F_MOVE_R, glm::vec2(0.8333f, 0.5f));
+
 		
 	sprite->changeAnimation(0);
 	sprite2->changeAnimation(0);
+	sprite3->changeAnimation(0);
 
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite3->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
 
 }
@@ -168,10 +204,55 @@ void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	sprite2->update(deltaTime);
+	sprite3->update(deltaTime);
 	if (canShoot < FRAME_SHOOT)
 		canShoot++;
 	if (actualBullet >= NUM_BALES - 5) actualBullet = 0;
-	if (!bJumping) {
+	if (frontal) {
+		chooseSprite = 3;
+		if (Game::instance().getKey(' '))
+			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), UP);
+		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+		{
+			if (sprite3->animation() != F_MOVE_L)
+				sprite3->changeAnimation(F_MOVE_L);
+			posPlayer.x -= 2;
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+			{
+				posPlayer.x += 2;
+				sprite3->changeAnimation(F_STAND);
+			}
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+		{
+			if (sprite3->animation() != F_MOVE_R)
+				sprite3->changeAnimation(F_MOVE_R);
+			posPlayer.x += 2;
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+			{
+				posPlayer.x -= 2;
+				sprite3->changeAnimation(F_STAND);
+			}
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN))
+			sprite3->changeAnimation(F_DOWN);
+		else if (runUp) {
+			if (sprite3->animation() != F_RUN_UP) {
+				sprite3->changeAnimation(F_RUN_UP);
+				startY = posPlayer.y;
+				round = 0;
+			}
+			posPlayer.y -= 1;
+			if (posPlayer.y < startY - 40) {
+				posPlayer.y = startY;
+				++round;
+			}
+		
+		}
+		else
+			sprite3->changeAnimation(F_STAND);
+	}
+	else if (!bJumping) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
 			posPlayer.x -= int(SPEED * deltaTime);
@@ -475,6 +556,7 @@ void Player::update(int deltaTime)
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite3->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
 	for (int i = 0; i < NUM_BALES; i++)
 	{
@@ -484,10 +566,12 @@ void Player::update(int deltaTime)
 
 void Player::render()
 {
-	if(chooseSprite == 1)
+	if (chooseSprite == 1)
 		sprite->render();
-	else
+	else if (chooseSprite == 2)
 		sprite2->render();
+	else
+		sprite3->render();
 	for (int i = 0; i < NUM_BALES; i++)
 	{
 		bales[i]->render();
@@ -589,12 +673,18 @@ void Player::shoot(const glm::vec2& pos, int angle)
 			velocitat.y = 2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 12), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
 		}
-		else
+		else if (angle == DOWN_L)
 		{
 			down = true;
 			velocitat.x = -2;
 			velocitat.y = 2;
 			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
+		}
+		else
+		{
+			up = true;
+			velocitat.y = -2;
+			bales[actualBullet]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 7), float(tileMapDispl.y + posPlayer.y + 13)), velocitat);
 		}
 		canShoot = 0;
 		actualBullet += 1;
@@ -631,4 +721,16 @@ void Player::shoot(const glm::vec2& pos, int angle)
 
 
 	
+}
+
+void Player::setFrontal(bool b) {
+	frontal = b;
+}
+
+void Player::setRunUpAnimation() {
+	runUp = true;
+}
+
+int Player::getRound() {
+	return round;
 }
