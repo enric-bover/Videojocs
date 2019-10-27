@@ -45,7 +45,7 @@ void Menu::init()
 	// load imageS
 	glm::vec2 geom[2] = { glm::vec2(0.f, 0.f), glm::vec2(CAMERA_WIDTH, CAMERA_HEIGHT) };
 	glm::vec2 texCoords[2] = { glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f) };
-	background = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	background = TexturedQuad::createTexturedQuad(geom, texCoords, &texProgram);
 	image[SCREEN_MENU].loadFromFile("images/menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	image[SCREEN_INSTRUCTIONS].loadFromFile("images/instructions.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	image[SCREEN_CREDITS].loadFromFile("images/creditos.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -53,7 +53,7 @@ void Menu::init()
 
 	glm::vec2 geom2[2] = { glm::vec2(0.f, 0.f), glm::vec2(16.0f, 10.0f) };
 	glm::vec2 texCoords2[2] = { glm::vec2(0.0f, 5.0f / 8.f), glm::vec2(1.0f / 8.0f, 6.0f / 8.0f) };
-	cursor = TexturedQuad::createTexturedQuad(geom2, texCoords2, texProgram);
+	cursor = TexturedQuad::createTexturedQuad(geom2, texCoords2, &texProgram);
 	imageCursor.loadFromFile("images/tileset_lv1.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	updatePosPoint();
@@ -114,7 +114,8 @@ void Menu::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	background->render(image[currentScreen]);
 	//render point
-	modelview = glm::translate(glm::mat4(1.f), glm::vec3(posPoint, 0.f));
+	cursor->setPosition(posPoint);
+	//modelview = glm::translate(glm::mat4(1.f), glm::vec3(posPoint, 0.f));
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	cursor->render(imageCursor);
 }

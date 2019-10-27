@@ -23,7 +23,7 @@ Scene::Scene()
 	map = NULL;
 	player = NULL;
 	first = true;
-	level = 1;
+	level = 2;
 	lives = 5;
 	cameraState = SIDE_SCROLLER;
 }
@@ -59,7 +59,7 @@ int Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	bool isDead = false;
-	for (int i = 0; i < 1 && !isDead; i++) {
+	for (int i = 0; i < 2 && !isDead; i++) {
 		if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
 			goomba[i]->update(deltaTime);
 			if (!goomba[i]->isDead())
@@ -76,6 +76,11 @@ int Scene::update(int deltaTime)
 				}
 			}
 		}
+	}
+
+	if (level == 2 && cameraState == FRONTAL)
+	{
+
 	}
 	
 	if (player->getPositionX() >= 192 * (map->getTileSize()))
@@ -96,7 +101,7 @@ void Scene::render()
 	texProgram.use();
 	projection = glm::ortho(cameraX, cameraX + float(CAMERA_WIDTH), float(CAMERA_HEIGHT), 0.f);
 	if (cameraState == ZOOM) 
-		projection = glm::ortho(cameraX, cameraX + float(CAMERA_WIDTH), float(CAMERA_HEIGHT) - cameraX, 0.f - cameraX);
+		projection = glm::ortho(cameraX, cameraX + float(CAMERA_WIDTH), float(CAMERA_HEIGHT) + cameraX, 0.f + cameraX);
 
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -105,9 +110,11 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	
 	map->render();
+	if (level == 2 && cameraState == FRONTAL)
+		fire->render(image);
 	player->render();
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
 				goomba[i]->render();
@@ -150,6 +157,7 @@ void Scene::initShaders()
 void Scene::updateCamera(int deltaTime)
 {
 	float playerX = float(player->getPositionX());
+	if (Game::instance().getKey('f')) cameraState = ZOOM;
 	if (level == 2 && cameraState == ZOOM)
 	{
 		cameraX = (map->getPosIniY() - player->getPositionY())/10;
@@ -174,52 +182,67 @@ void Scene::loadLevel(int lvl)
 	map = TileMap::createTileMap("levels/level0" + to_string(lvl) + ".txt", glm::vec2(CAMERA_X, CAMERA_Y), texProgram);
 	player->setTileMap(map);
 	setPlayerIniPos();
-	//if (level == 1) loadEnemies1();
-	loadEnemies1();
-	if (lvl == 2) cameraState = FRONTAL;
+	loadEnemies(level);
+	if (lvl == 2)
+	{
+		cameraState = FRONTAL;
+		glm::vec2 geom[2] = { glm::vec2(0.f, 0.f), glm::vec2(16 * 11, 16) };
+		glm::vec2 texCoords[2] = { glm::vec2(0.f, 10.f / 11.f), glm::vec2(1.f, 1.f) };
+		image.loadFromFile("images/tileset_lv2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		fire = TexturedQuad::createTexturedQuad(geom, texCoords, &texProgram);
+		fire->setPosition(glm::vec2(72, 160));
+		
+	}
 	else cameraState = SIDE_SCROLLER;
 }
 
-void Scene::loadEnemies1()
+void Scene::loadEnemies(int lvl)
 {
-	//Si lo pones en un fichero loadEnemies(int lvl) "levels/enemies" + to_string(lvl) + ".txt"
-	/*
-	ENEMIES
-		20				-- number of goombas
-		//pos goombas
-		30				-- number of koopas
-		// pos koopas
-		1				-- number of lakitus
-	*/
-
-	for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/; i++)
+	//if (goomba != NULL)
+		//delete goomba;
+	if (lvl == 1)
 	{
-		goomba[i] = new Goomba();
-		goomba[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
-		goomba[i]->setTileMap(map);
-	}
+		for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/; i++)
+		{
+			goomba[i] = new Goomba();
+			goomba[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+			goomba[i]->setTileMap(map);
+		}
 
-	//FICAR LES COORDENADES INICALS DELS GOOMBAS EN ALGUN ARXIU EXTERN
-	goomba[0]->setPosition(glm::vec2((6) * map->getTileSize(), 1 * map->getTileSize()));
-	/*goomba[1]->setPosition(glm::vec2((8) * map->getTileSize(), 8 * map->getTileSize()));
-	goomba[2]->setPosition(glm::vec2((10) * map->getTileSize(), 8 * map->getTileSize()));
-	goomba[3]->setPosition(glm::vec2((9) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[4]->setPosition(glm::vec2((10) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[5]->setPosition(glm::vec2((11) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[6]->setPosition(glm::vec2((12) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[7]->setPosition(glm::vec2((13) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[8]->setPosition(glm::vec2((14) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[9]->setPosition(glm::vec2((15) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[10]->setPosition(glm::vec2((16) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[11]->setPosition(glm::vec2((17) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[12]->setPosition(glm::vec2((18) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[13]->setPosition(glm::vec2((19) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[14]->setPosition(glm::vec2((20) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[15]->setPosition(glm::vec2((21) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[16]->setPosition(glm::vec2((22) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[17]->setPosition(glm::vec2((23) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[18]->setPosition(glm::vec2((24) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	goomba[19]->setPosition(glm::vec2((66) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));*/
+		//FICAR LES COORDENADES INICALS DELS GOOMBAS EN ALGUN ARXIU EXTERN
+		goomba[0]->setPosition(glm::vec2((6) * map->getTileSize(), 1 * map->getTileSize()));
+		/*goomba[1]->setPosition(glm::vec2((8) * map->getTileSize(), 8 * map->getTileSize()));
+		goomba[2]->setPosition(glm::vec2((10) * map->getTileSize(), 8 * map->getTileSize()));
+		goomba[3]->setPosition(glm::vec2((9) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[4]->setPosition(glm::vec2((10) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[5]->setPosition(glm::vec2((11) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[6]->setPosition(glm::vec2((12) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[7]->setPosition(glm::vec2((13) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[8]->setPosition(glm::vec2((14) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[9]->setPosition(glm::vec2((15) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[10]->setPosition(glm::vec2((16) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[11]->setPosition(glm::vec2((17) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[12]->setPosition(glm::vec2((18) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[13]->setPosition(glm::vec2((19) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[14]->setPosition(glm::vec2((20) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[15]->setPosition(glm::vec2((21) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[16]->setPosition(glm::vec2((22) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[17]->setPosition(glm::vec2((23) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[18]->setPosition(glm::vec2((24) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+		goomba[19]->setPosition(glm::vec2((66) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));*/
+	}
+	else if (lvl == 2) 
+	{
+		for (int i = 0; i < 2/*NUMBER_OF_GOOMBAS*/; i++)
+		{
+			goomba[i] = new Goomba();
+			goomba[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+			goomba[i]->setTileMap(map);
+		}
+		goomba[0]->setPosition(glm::vec2((10) * map->getTileSize(), 6 * map->getTileSize()));
+		goomba[1]->setPosition(glm::vec2((12) * map->getTileSize(), 6 * map->getTileSize()));
+	}
+	
 }
 
 void Scene::setPlayerIniPos()

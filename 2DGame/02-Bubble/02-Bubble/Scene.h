@@ -7,7 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Goomba.h"
-
+#include "TexturedQuad.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -28,7 +28,7 @@ private:
 	void initShaders();
 	void updateCamera(int deltaTime);
 	void loadLevel(int lvl);
-	void loadEnemies1();
+	void loadEnemies(int lvl);
 	void setPlayerIniPos();
 
 private:
@@ -44,6 +44,10 @@ private:
 	int lives;
 	// Text textLifes;
 	int cameraState;
+	// level 2 
+	TexturedQuad* fire;
+	Texture image;
+
 
 };
 
