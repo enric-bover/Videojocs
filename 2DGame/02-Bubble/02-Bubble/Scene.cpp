@@ -53,6 +53,7 @@ int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	interrogante->update(deltaTime);
 	bool isDead = false;
 	for (int i = 0; i < 1 && !isDead; i++) {
 		if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
@@ -99,7 +100,7 @@ void Scene::render()
 	
 	map->render();
 	player->render();
-
+	interrogante->render();
 	for (int i = 0; i < 1; i++)
 	{
 		if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
@@ -186,6 +187,7 @@ void Scene::loadEnemies1()
 		goomba[i]->setTileMap(map);
 	}
 
+	
 	//FICAR LES COORDENADES INICALS DELS GOOMBAS EN ALGUN ARXIU EXTERN
 	goomba[0]->setPosition(glm::vec2((6) * map->getTileSize(), 1 * map->getTileSize()));
 	/*goomba[1]->setPosition(glm::vec2((8) * map->getTileSize(), 8 * map->getTileSize()));
@@ -207,6 +209,11 @@ void Scene::loadEnemies1()
 	goomba[17]->setPosition(glm::vec2((23) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	goomba[18]->setPosition(glm::vec2((24) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	goomba[19]->setPosition(glm::vec2((66) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));*/
+
+	interrogante = new block_interrogante();
+	interrogante->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+	interrogante->setTileMap(map);
+	interrogante->setPosition(glm::vec2((9) * map->getTileSize(), 9 * map->getTileSize()));
 }
 
 void Scene::setPlayerIniPos()
