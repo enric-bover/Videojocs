@@ -73,6 +73,17 @@ int Scene::update(int deltaTime)
 	}
 	if (player->dies(glm::ivec2(interrogante->getPositionX(), interrogante->getPositionY()), interrogante->getSpriteSize()))
 		interrogante->damage();
+	if (player->dies(glm::ivec2(interrogante->getBuffPositionX(), interrogante->getBuffPositionY()), interrogante->getBuffSpriteSize()))
+	{
+		if (interrogante->isDead()) {
+			interrogante->start();
+			interrogante->update(deltaTime);
+			if(interrogante->BuffisActive())
+				player->activeTripleshoot();
+		}
+		if (interrogante->BuffisActive())
+			interrogante->BuffDamage();
+	}
 
 	if (player->getPositionX() >= 192 * (map->getTileSize()))
 	{

@@ -23,8 +23,14 @@ public:
 	int getPositionX();
 	int getPositionY();
 	bool isDead();
+	bool BuffisActive();
 	void damage();
+	void start();
+	void BuffDamage();
 	glm::vec2 getSpriteSize();
+	glm::vec2 getBuffSpriteSize();
+	int getBuffPositionX();
+	int getBuffPositionY();
 
 
 private:

@@ -93,13 +93,43 @@ glm::vec2 block_interrogante::getSpriteSize()
 	return spriteSize;
 }
 
+int block_interrogante::getBuffPositionX()
+{
+	return buff->getPositionX();
+}
+
+int block_interrogante::getBuffPositionY()
+{
+	return buff->getPositionY();
+}
+
+glm::vec2 block_interrogante::getBuffSpriteSize()
+{
+	return buff->getSpriteSize();
+}
+
 bool block_interrogante::isDead()
 {
 	return (hp <= 0);
 }
 
+bool block_interrogante::BuffisActive()
+{
+	return buff->isActive();
+}
+
+void block_interrogante::start()
+{
+	buff->activate();
+}
+
 void block_interrogante::damage()
 {
-	buff->damage();
+	//buff->damage();
 	hp--;
+}
+
+void block_interrogante::BuffDamage()
+{
+	buff->damage();
 }

@@ -26,6 +26,7 @@ public:
 	int getPositionY();
 	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 	bool kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
+	void activeTripleshoot();
 
 private:
 	void shoot(const glm::vec2& pos, int angle);

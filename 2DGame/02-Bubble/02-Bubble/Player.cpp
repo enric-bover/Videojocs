@@ -468,10 +468,6 @@ void Player::update(int deltaTime)
 		chooseSprite = 1;
 	}
 	
-	if (Game::instance().getKey('t'))
-	{
-		tripleshoot = true;
-	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -632,4 +628,9 @@ void Player::shoot(const glm::vec2& pos, int angle)
 
 
 	
+}
+
+void Player::activeTripleshoot()
+{
+	tripleshoot = true;
 }

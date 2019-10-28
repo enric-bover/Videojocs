@@ -22,8 +22,9 @@ enum BlockAnimations
 
 void spreadGunBuff::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
-	hp = 10;
+	hp = 2;
 	start = 0;
+	active = false;
 	spriteSize = glm::ivec2(24, 15);
 	spritesheet.loadFromFile("images/SpreadGunBuff.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.25f, 0.5f), &spritesheet, &shaderProgram);
@@ -35,7 +36,7 @@ void spreadGunBuff::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProg
 	sprite->addKeyframe(ALIVE, glm::vec2(0.5f, 0.0f));
 	sprite->addKeyframe(ALIVE, glm::vec2(0.75f, 0.0f));
 
-	sprite->setAnimationSpeed(LIVING, 6);
+	sprite->setAnimationSpeed(LIVING, 5);
 	sprite->addKeyframe(LIVING, glm::vec2(0.75f, 0.5f));
 	sprite->addKeyframe(LIVING, glm::vec2(0.5f, 0.5f));
 	sprite->addKeyframe(LIVING, glm::vec2(0.25f, 0.5f));
@@ -66,6 +67,10 @@ void spreadGunBuff::update(int deltaTime)
 	{
 		if (sprite->animation() != ALIVE)
 			sprite->changeAnimation(ALIVE);
+		if (sprite->lastKeyFrame())
+			active = true;
+		else
+			active = false;
 	}
 	if(start > 0)
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -106,14 +111,19 @@ glm::vec2 spreadGunBuff::getSpriteSize()
 	return spriteSize;
 }
 
-bool spreadGunBuff::isDead()
+bool spreadGunBuff::isActive()
 {
-	return (hp <= 0);
+	return (active) && (start == 2);
+}
+
+void spreadGunBuff::activate()
+{
+	if(start == 0)
+		start = 1;
 }
 
 void spreadGunBuff::damage()
 {
-	if(start == 0)
-		start = 1;
-	hp--;
+	if(start > 1)
+		hp--;
 }

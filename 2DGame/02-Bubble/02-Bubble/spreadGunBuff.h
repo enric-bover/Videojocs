@@ -22,7 +22,8 @@ public:
 	void setPosition(const glm::vec2& pos);
 	int getPositionX();
 	int getPositionY();
-	bool isDead();
+	bool isActive();
+	void activate();
 	void damage();
 	glm::vec2 getSpriteSize();
 
@@ -39,6 +40,7 @@ private:
 	int hp;
 	int direction;
 	bool dead;
+	bool active;
 
 };
 
