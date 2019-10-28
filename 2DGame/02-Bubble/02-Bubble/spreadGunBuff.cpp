@@ -89,7 +89,7 @@ void spreadGunBuff::setTileMap(TileMap* tileMap)
 {
 	map = tileMap;
 }
-
+ 
 void spreadGunBuff::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;

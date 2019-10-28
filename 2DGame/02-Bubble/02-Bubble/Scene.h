@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Goomba.h"
+#include "Koopa.h"
 #include "block_interrogante.h"
 
 
@@ -37,6 +38,7 @@ private:
 	Player *player;
 	block_interrogante* interrogante;
 	Goomba *goomba[20];
+	Koopa* koopa;
 	ShaderProgram texProgram;
 	bool first;
 	float currentTime;

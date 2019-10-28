@@ -71,6 +71,22 @@ int Scene::update(int deltaTime)
 			}
 		}
 	}
+	//koopas
+	if (koopa->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
+		koopa->update(deltaTime);
+		if (!koopa->isDead())
+		{
+			if (player->dies(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
+			{
+				isDead = true;
+				--lives;
+				setPlayerIniPos();
+			}
+			if (player->kills(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
+				koopa->damage();
+		}
+	}
+
 	if (player->dies(glm::ivec2(interrogante->getPositionX(), interrogante->getPositionY()), interrogante->getSpriteSize()))
 		interrogante->damage();
 	if (player->dies(glm::ivec2(interrogante->getBuffPositionX(), interrogante->getBuffPositionY()), interrogante->getBuffSpriteSize()))
@@ -85,6 +101,8 @@ int Scene::update(int deltaTime)
 			interrogante->BuffDamage();
 	}
 
+	if (player->getPositionY() >= 12.5 * (map->getTileSize())) //caes al vacio*
+		setPlayerIniPos();
 	if (player->getPositionX() >= 192 * (map->getTileSize()))
 	{
 		level++;
@@ -117,6 +135,10 @@ void Scene::render()
 		if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
 				goomba[i]->render();
 		}
+	}
+
+	if (koopa->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
+		koopa->render();
 	}
 
 	//textLifes.render("Lifes: " + to_string(lives), glm::vec2(10, 10 + 32), 32, glm::vec4(1, 1, 1, 1));
@@ -197,10 +219,14 @@ void Scene::loadEnemies1()
 		goomba[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
 		goomba[i]->setTileMap(map);
 	}
+	koopa = new Koopa();
+	koopa->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+	koopa->setTileMap(map);
+	koopa->setPosition(glm::vec2((20) * map->getTileSize(), 1 * map->getTileSize()));
 
 	
 	//FICAR LES COORDENADES INICALS DELS GOOMBAS EN ALGUN ARXIU EXTERN
-	goomba[0]->setPosition(glm::vec2((6) * map->getTileSize(), 1 * map->getTileSize()));
+	goomba[0]->setPosition(glm::vec2((6) * map->getTileSize(), 8 * map->getTileSize()));
 	/*goomba[1]->setPosition(glm::vec2((8) * map->getTileSize(), 8 * map->getTileSize()));
 	goomba[2]->setPosition(glm::vec2((10) * map->getTileSize(), 8 * map->getTileSize()));
 	goomba[3]->setPosition(glm::vec2((9) * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
