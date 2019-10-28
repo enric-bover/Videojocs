@@ -22,7 +22,7 @@ enum LakituAnimations
 void Lakitu::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram/*, const glm::ivec2& MinMaxX*/)
 {
 	bJumping = false;
-	hp = 15;
+	hp = 3;
 	throwSpinny = false;
 	countThrow = 0;
 	movementy = 0;
@@ -102,43 +102,59 @@ void Lakitu::update(int deltaTime)
 		posPlayer.y -= (movementy % 3) % 2;
 	}
 	int frame = sprite->getCurrentKeyFrame();
-	if (direction == MOVE_LEFT)
+	if (hp > 0)
 	{
-		if (throwSpinny) 
+		if (direction == MOVE_LEFT)
 		{
-			
-			if (sprite->animation() == THROW_RIGHT)
+			if (throwSpinny)
 			{
-				sprite->changeAnimation(THROW_LEFT);
-				sprite->setCurrentFrame(frame);
-			}
-			else if (sprite->animation() != THROW_LEFT)
-				sprite->changeAnimation(THROW_LEFT);
 
-			if (sprite->lastKeyFrame())
-				throwSpinny = false;
+				if (sprite->animation() == THROW_RIGHT)
+				{
+					sprite->changeAnimation(THROW_LEFT);
+					sprite->setCurrentFrame(frame);
+				}
+				else if (sprite->animation() != THROW_LEFT)
+					sprite->changeAnimation(THROW_LEFT);
+
+				if (sprite->lastKeyFrame())
+					throwSpinny = false;
+			}
+			else if (sprite->animation() != MOVE_LEFT)
+				sprite->changeAnimation(MOVE_LEFT);
+			posPlayer.x -= 1;
 		}
-		else if (sprite->animation() != MOVE_LEFT)
-			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= 1;
+		else
+		{
+			if (throwSpinny)
+			{
+				if (sprite->animation() == THROW_LEFT)
+				{
+					sprite->changeAnimation(THROW_RIGHT);
+					sprite->setCurrentFrame(frame);
+				}
+				else if (sprite->animation() != THROW_RIGHT)
+					sprite->changeAnimation(THROW_RIGHT);
+				else if (sprite->lastKeyFrame())
+					throwSpinny = false;
+			}
+			else if (sprite->animation() != MOVE_RIGHT)
+				sprite->changeAnimation(MOVE_RIGHT);
+			posPlayer.x += 1;
+		}
 	}
 	else
 	{
-		if (throwSpinny)
-		{
-			if (sprite->animation() == THROW_LEFT)
-			{
-				sprite->changeAnimation(THROW_RIGHT);
-				sprite->setCurrentFrame(frame);
-			}
-			else if (sprite->animation() != THROW_RIGHT)
-				sprite->changeAnimation(THROW_RIGHT);
+		if (direction == MOVE_LEFT)
+			if (sprite->animation() != DIE_LEFT)
+				sprite->changeAnimation(DIE_LEFT);
 			else if (sprite->lastKeyFrame())
-				throwSpinny = false;
-		}
-		else if (sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 1;
+				dead = true;
+		if (direction == MOVE_RIGHT)
+			if (sprite->animation() != DIE_RIGHT)
+				sprite->changeAnimation(DIE_RIGHT);
+			else if (sprite->lastKeyFrame())
+				dead = true;
 	}
 	sprite->update(deltaTime);
 	

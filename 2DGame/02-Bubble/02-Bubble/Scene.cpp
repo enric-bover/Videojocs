@@ -139,8 +139,17 @@ int Scene::update(int deltaTime)
 	}
 
 	if (level == 3)
-	{
+	{	
 		lakitu->update(deltaTime);
+		if (!lakitu->isDead()) {
+			if (player->dies(glm::ivec2(lakitu->getPositionX(), lakitu->getPositionY()), lakitu->getSpriteSize()))
+			{
+
+				setPlayerIniPos();
+			}
+			if (player->kills(glm::ivec2(lakitu->getPositionX(), lakitu->getPositionY()), lakitu->getSpriteSize()))
+				lakitu->damage();
+		}
 	}
 	
 	if (level == 1 && goalState1()) 
