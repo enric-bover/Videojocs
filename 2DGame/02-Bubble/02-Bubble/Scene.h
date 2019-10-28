@@ -11,6 +11,9 @@
 #include "TexturedQuad.h"
 #include "Sphere.h"
 #include "Explosion.h"
+#include "Koopa.h"
+#include "Lakitu.h"
+#include "block_interrogante.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -40,7 +43,10 @@ private:
 private:
 	TileMap *map;
 	Player *player;
+	block_interrogante* interrogante;
 	Goomba *goomba[20];
+	Koopa* koopa;
+	Lakitu* lakitu;
 	ShaderProgram texProgram;
 	bool first;
 	float currentTime;

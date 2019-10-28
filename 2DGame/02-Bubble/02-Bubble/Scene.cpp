@@ -57,9 +57,11 @@ int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	bool dead = false;
 
-	for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/ && !dead; i++) {
+	interrogante->update(deltaTime);
+	lakitu->update(deltaTime);
+	bool isDead = false;
+	for (int i = 0; i < 1 && !isDead; i++) {
 		if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
 			goomba[i]->update(deltaTime);
 			if (!goomba[i]->isDead())
@@ -70,15 +72,44 @@ int Scene::update(int deltaTime)
 					setPlayerIniPos();
 				}
 				if (player->kills(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
-				{
 					goomba[i]->damage();
-				}
 			}
 		}
 	}
+	//koopas
+	if (koopa->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
+		koopa->update(deltaTime);
+		if (!koopa->isDead())
+		{
+			if (player->dies(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
+			{
+				isDead = true;
+				--lives;
+				setPlayerIniPos();
+			}
+			if (player->kills(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
+				koopa->damage();
+		}
+	}
+
+	if (player->dies(glm::ivec2(interrogante->getPositionX(), interrogante->getPositionY()), interrogante->getSpriteSize()))
+		interrogante->damage();
+	if (player->dies(glm::ivec2(interrogante->getBuffPositionX(), interrogante->getBuffPositionY()), interrogante->getBuffSpriteSize()))
+	{
+		if (interrogante->isDead()) {
+			interrogante->start();
+			interrogante->update(deltaTime);
+			if(interrogante->BuffisActive())
+				player->activeTripleshoot();
+		}
+		if (interrogante->BuffisActive())
+			interrogante->BuffDamage();
+	}
+
 
 	for (int i = 0; i < 5/*NUMBER_OF_HB*/ && !dead; i++) {
-		if (hammerBros[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
+		if (hammerBros[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) 
+    {
 			hammerBros[i]->update(deltaTime, player->getPosition());
 			if (!hammerBros[i]->isDead())
 			{
@@ -92,13 +123,17 @@ int Scene::update(int deltaTime)
 					hammerBros[i]->damage();
 			}
 		}
-	}
+  }
+  
+	if (player->getPositionY() >= 12.5 * (map->getTileSize())) //caes al vacio*
+		setPlayerIniPos();
 
 
 	if (level == 2)
 	{
 		sphere->update(deltaTime);
-		if (!sphere->isDead()) {
+		if (!sphere->isDead()) 
+    {
 			if (player->kills(sphere->getPos(), sphere->getSpriteSize())) sphere->damage();
 		}
 	}
@@ -149,13 +184,16 @@ void Scene::render()
 	}
 		
 	player->render();
+  if (level == 1)
+	  interrogante->render();
 
-	for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/; i++)
+  for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/; i++)
 	{
 		if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
 				goomba[i]->render();
 		}
 	}
+
 
 	for (int i = 0; i < 5; ++i)
 		hammerBros[i]->render(cameraX, SCREEN_WIDTH);
@@ -171,6 +209,12 @@ void Scene::render()
 		explosion->setPosition(glm::ivec2(160 , 70));
 		explosion->render();
 	}
+
+	if (koopa->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
+		koopa->render();
+	}
+	lakitu->render();
+
 
 	//textLifes.render("Lifes: " + to_string(lives), glm::vec2(10, 10 + 32), 32, glm::vec4(1, 1, 1, 1));
 }
@@ -261,7 +305,22 @@ void Scene::loadEnemies(int lvl)
 {
 	switch (lvl)
 	{
-	case 1:
+	case 1:  
+    lakitu = new Lakitu();
+	  lakitu->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+	  lakitu->setTileMap(map);
+	  lakitu->setPosition(glm::vec2((5) * map->getTileSize(), 2 * map->getTileSize()));
+      
+    interrogante = new block_interrogante();
+	  interrogante->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+	  interrogante->setTileMap(map);
+	  interrogante->setPosition(glm::vec2((9) * map->getTileSize(), 9 * map->getTileSize()));
+      
+    koopa = new Koopa();
+	  koopa->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+	  koopa->setTileMap(map);
+	  koopa->setPosition(glm::vec2((20) * map->getTileSize(), 1 * map->getTileSize()));
+      
 		for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/; i++)
 		{
 			goomba[i] = new Goomba();
@@ -315,7 +374,6 @@ void Scene::loadEnemies(int lvl)
 	default:
 		break;
 	}
-
 }
 
 void Scene::setPlayerIniPos()

@@ -549,10 +549,6 @@ void Player::update(int deltaTime)
 		chooseSprite = 1;
 	}
 	
-	if (Game::instance().getKey('t'))
-	{
-		tripleshoot = true;
-	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite2->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -603,7 +599,7 @@ int Player::getPositionY()
 
 bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 {
-	//hago el tamaño de colision mas pequeño para que no se note tanto que tenemos pixeles vacios delante del sprite del player
+	//hago el tamaÃ±o de colision mas pequeÃ±o para que no se note tanto que tenemos pixeles vacios delante del sprite del player
 	int xEnemie1, xEnemie2, yEnemie1, yEnemie2;
 	xEnemie1 = posEnemie.x + 4;
 	xEnemie2 = xEnemie1 + sizeTile.x - 2;
@@ -621,6 +617,7 @@ bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 	return false;
 	
 }
+
 
 bool Player::kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile) 
 {
@@ -742,4 +739,9 @@ glm::ivec2 Player::getPosition() {
 glm::vec2 Player::getSpriteSize()
 {
 	return spriteSize;
+}
+
+void Player::activeTripleshoot()
+{
+	tripleshoot = true;
 }

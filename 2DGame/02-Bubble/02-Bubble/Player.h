@@ -31,6 +31,7 @@ public:
 	void setRunUpAnimation();
 	int getRound();
 	glm::vec2 getSpriteSize();
+	void activeTripleshoot();
 
 private:
 	void shoot(const glm::vec2& pos, int angle);
