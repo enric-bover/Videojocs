@@ -7,10 +7,13 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Goomba.h"
+#include "HammerBros.h"
+#include "TexturedQuad.h"
+#include "Sphere.h"
+#include "Explosion.h"
 #include "Koopa.h"
 #include "Lakitu.h"
 #include "block_interrogante.h"
-
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -31,8 +34,11 @@ private:
 	void initShaders();
 	void updateCamera(int deltaTime);
 	void loadLevel(int lvl);
-	void loadEnemies1();
+	void loadEnemies(int lvl);
 	void setPlayerIniPos();
+	bool goalState1();
+	bool goalState2();
+	bool goalState3();
 
 private:
 	TileMap *map;
@@ -47,9 +53,16 @@ private:
 	glm::mat4 projection;
 	float cameraX;
 	int level;
-	int lives;
 	// Text textLifes;
-	bool frontalCamera;
+	int cameraState;
+	// level 2 
+	TexturedQuad* bgS2, *fireBar;
+	Texture imageBgS2, imageFireBar;
+	Sphere* sphere;
+	float cineTimer;
+	Explosion *explosion;
+
+	HammerBros* hammerBros[5];
 
 };
 

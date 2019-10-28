@@ -22,22 +22,26 @@ public:
 	void setPosition(const glm::vec2& pos);
 	int getPositionX();
 	int getPositionY();
+	glm::ivec2 getPosition();
 	bool isDead();
 	void damage();
 	glm::vec2 getSpriteSize();
+	void revive();
 	 
 
 private:
-	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
 	int jumpAngle, startY;
-	Texture spritesheet;
 	Texture spritesheet2;
+	
+protected:
+	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
+	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
+	bool bJumping;
 	int hp;
-	int direction;
 	bool dead;
+	int direction;
 
 };
 

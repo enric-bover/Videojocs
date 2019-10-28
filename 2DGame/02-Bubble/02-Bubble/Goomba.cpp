@@ -137,3 +137,13 @@ void Goomba::damage()
 {
 	hp--;
 }
+
+void Goomba::revive()
+{
+	hp = 3;
+	dead = false;
+}
+
+glm::ivec2 Goomba::getPosition() {
+	return posPlayer;
+}
