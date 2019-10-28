@@ -36,11 +36,10 @@ void Explosion::init(const glm::ivec2& pos, ShaderProgram& shaderProgram)
 
 void Explosion::update(int deltaTime)
 {
-	timer += deltaTime;
-	if (timer <= 1000)
-		sprite->update(deltaTime);
-	else
+	if (sprite->lastKeyFrame())
 		end = true;
+	else if (!end)
+		sprite->update(deltaTime);
 }
 
 void Explosion::render()
@@ -67,7 +66,6 @@ glm::vec2 Explosion::getPos()
 
 void Explosion::start() {
 	end = false;
-	timer = 0.0f;
 }
 
 bool Explosion::hasFinished() {

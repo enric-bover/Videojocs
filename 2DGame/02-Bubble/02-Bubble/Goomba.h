@@ -28,16 +28,18 @@ public:
 	 
 
 private:
-	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
 	int jumpAngle, startY;
-	Texture spritesheet;
 	Texture spritesheet2;
+	
+protected:
+	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
+	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
+	bool bJumping;
 	int hp;
-	int direction;
 	bool dead;
+	int direction;
 
 };
 

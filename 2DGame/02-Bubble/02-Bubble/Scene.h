@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Goomba.h"
+#include "HammerBros.h"
 #include "TexturedQuad.h"
 #include "Sphere.h"
 #include "Explosion.h"
@@ -54,6 +55,8 @@ private:
 	Sphere* sphere;
 	float cineTimer;
 	Explosion *explosion;
+
+	HammerBros* hammerBros;
 
 };
 

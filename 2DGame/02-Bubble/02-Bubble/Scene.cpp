@@ -102,7 +102,7 @@ int Scene::update(int deltaTime)
 	}
 	else if (level == 3 && goalState3()) return 0;
 	
-
+	hammerBros->update(deltaTime);
 	updateCamera(deltaTime);
 	return 1;	// si te quedas sin vidas retorna 0 que es volver al Menu
 }
@@ -150,6 +150,8 @@ void Scene::render()
 		explosion->setPosition(glm::ivec2(160 , 70));
 		explosion->render();
 	}
+
+	hammerBros->render();
 
 	//textLifes.render("Lifes: " + to_string(lives), glm::vec2(10, 10 + 32), 32, glm::vec4(1, 1, 1, 1));
 }
@@ -209,6 +211,7 @@ void Scene::loadLevel(int lvl)
 	player->setFrontal(false);
 	setPlayerIniPos();
 	loadEnemies(level);
+
 	if (lvl == 2)
 	{
 		cameraState = FRONTAL;
@@ -265,6 +268,11 @@ void Scene::loadEnemies(int lvl)
 	goomba[17]->setPosition(glm::vec2((145) * map->getTileSize(), 5 * map->getTileSize()));
 	goomba[18]->setPosition(glm::vec2((156) * map->getTileSize(), 4 * map->getTileSize()));
 	goomba[19]->setPosition(glm::vec2((160) * map->getTileSize(), 7 * map->getTileSize()));
+
+	hammerBros = new HammerBros;
+	hammerBros->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+	hammerBros->setTileMap(map);
+	hammerBros->setPosition(glm::vec2((18) * map->getTileSize(), 10 * map->getTileSize()));
 
 }
 

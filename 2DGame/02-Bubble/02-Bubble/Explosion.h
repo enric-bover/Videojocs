@@ -20,6 +20,5 @@ private:
 	Texture spritesheet;
 	Sprite* sprite;
 	bool end;
-	int timer;
 };
 
