@@ -68,7 +68,7 @@ int Scene::update(int deltaTime)
 			{
 				if (player->dies(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
 				{
-					dead = true;
+					isDead = true;
 					setPlayerIniPos();
 				}
 				if (player->kills(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
@@ -84,7 +84,6 @@ int Scene::update(int deltaTime)
 			if (player->dies(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
 			{
 				isDead = true;
-				--lives;
 				setPlayerIniPos();
 			}
 			if (player->kills(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
@@ -107,7 +106,7 @@ int Scene::update(int deltaTime)
 	}
 
 
-	for (int i = 0; i < 5/*NUMBER_OF_HB*/ && !dead; i++) {
+	for (int i = 0; i < 5/*NUMBER_OF_HB*/ && !isDead; i++) {
 		if (hammerBros[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) 
     {
 			hammerBros[i]->update(deltaTime, player->getPosition());
@@ -116,7 +115,7 @@ int Scene::update(int deltaTime)
 				if (player->dies(hammerBros[i]->getPosition(), hammerBros[i]->getSpriteSize()) || 
 					hammerBros[i]->collisionWithHammer(player->getPosition(), player->getSpriteSize()))
 				{
-					dead = true;
+					isDead = true;
 					setPlayerIniPos();
 				}
 				if (player->kills(hammerBros[i]->getPosition(), hammerBros[i]->getSpriteSize()))

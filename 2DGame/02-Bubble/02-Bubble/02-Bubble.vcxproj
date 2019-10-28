@@ -13,13 +13,20 @@
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
     <ClInclude Include="Balas.h" />
+    <ClInclude Include="block_interrogante.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Goomba.h" />
+    <ClInclude Include="HammerBros.h" />
+    <ClInclude Include="Koopa.h" />
+    <ClInclude Include="Lakitu.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="spreadGunBuff.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
@@ -28,14 +35,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Balas.cpp" />
+    <ClCompile Include="block_interrogante.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Goomba.cpp" />
+    <ClCompile Include="HammerBros.cpp" />
+    <ClCompile Include="Koopa.cpp" />
+    <ClCompile Include="Lakitu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="spreadGunBuff.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
