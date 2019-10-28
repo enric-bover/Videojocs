@@ -24,13 +24,18 @@ public:
 	int getPositionY();
 	bool isDead();
 	void damage();
+	void setMaxMinX(const glm::vec2& pos);
+
 	glm::vec2 getSpriteSize();
 
 
 private:
 	bool bJumping;
+	bool throwSpinny;
+	int countThrow;
 	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
 	int jumpAngle, startY;
+	int MinX, MaxX;
 	Texture spritesheet;
 	Texture spritesheet2;
 	Sprite* sprite;

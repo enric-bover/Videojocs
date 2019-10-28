@@ -22,7 +22,7 @@ Scene::Scene()
 	map = NULL;
 	player = NULL;
 	first = true;
-	level = 1;
+	level = 3;
 	cameraState = SIDE_SCROLLER;
 	cineTimer = 0.0f;
 }
@@ -57,72 +57,73 @@ int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-
-	interrogante->update(deltaTime);
-	lakitu->update(deltaTime);
-	bool isDead = false;
-	for (int i = 0; i < 1 && !isDead; i++) {
-		if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
-			goomba[i]->update(deltaTime);
-			if (!goomba[i]->isDead())
-			{
-				if (player->dies(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
-				{
-					isDead = true;
-					setPlayerIniPos();
-				}
-				if (player->kills(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
-					goomba[i]->damage();
-			}
-		}
-	}
-	//koopas
-	if (koopa->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
-		koopa->update(deltaTime);
-		if (!koopa->isDead())
-		{
-			if (player->dies(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
-			{
-				isDead = true;
-				setPlayerIniPos();
-			}
-			if (player->kills(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
-				koopa->damage();
-		}
-	}
-
-	if (player->dies(glm::ivec2(interrogante->getPositionX(), interrogante->getPositionY()), interrogante->getSpriteSize()))
-		interrogante->damage();
-	if (player->dies(glm::ivec2(interrogante->getBuffPositionX(), interrogante->getBuffPositionY()), interrogante->getBuffSpriteSize()))
+	if(level ==1)
 	{
-		if (interrogante->isDead()) {
-			interrogante->start();
-			interrogante->update(deltaTime);
-			if(interrogante->BuffisActive())
-				player->activeTripleshoot();
+		interrogante->update(deltaTime);
+		bool isDead = false;
+		for (int i = 0; i < 1 && !isDead; i++) {
+			if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
+				goomba[i]->update(deltaTime);
+				if (!goomba[i]->isDead())
+				{
+					if (player->dies(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
+					{
+						isDead = true;
+						setPlayerIniPos();
+					}
+					if (player->kills(glm::ivec2(goomba[i]->getPositionX(), goomba[i]->getPositionY()), goomba[i]->getSpriteSize()))
+						goomba[i]->damage();
+				}
+			}
 		}
-		if (interrogante->BuffisActive())
-			interrogante->BuffDamage();
-	}
-
-
-	for (int i = 0; i < 5/*NUMBER_OF_HB*/ && !isDead; i++) {
-		if (hammerBros[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) 
-    {
-			hammerBros[i]->update(deltaTime, player->getPosition());
-			if (!hammerBros[i]->isDead())
+		//koopas
+		if (koopa->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
+			koopa->update(deltaTime);
+			if (!koopa->isDead())
 			{
-				if (player->dies(hammerBros[i]->getPosition(), hammerBros[i]->getSpriteSize()) || 
-					hammerBros[i]->collisionWithHammer(player->getPosition(), player->getSpriteSize()))
+				if (player->dies(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
 				{
 					isDead = true;
 					setPlayerIniPos();
 				}
-				if (player->kills(hammerBros[i]->getPosition(), hammerBros[i]->getSpriteSize()))
-					hammerBros[i]->damage();
+				if (player->kills(glm::ivec2(koopa->getPositionX(), koopa->getPositionY()), koopa->getSpriteSize()))
+					koopa->damage();
 			}
 		}
-  }
+
+		if (player->dies(glm::ivec2(interrogante->getPositionX(), interrogante->getPositionY()), interrogante->getSpriteSize()))
+			interrogante->damage();
+		if (player->dies(glm::ivec2(interrogante->getBuffPositionX(), interrogante->getBuffPositionY()), interrogante->getBuffSpriteSize()))
+		{
+			if (interrogante->isDead()) {
+				interrogante->start();
+				interrogante->update(deltaTime);
+				if (interrogante->BuffisActive())
+					player->activeTripleshoot();
+			}
+			if (interrogante->BuffisActive())
+				interrogante->BuffDamage();
+		}
+
+
+		for (int i = 0; i < 5/*NUMBER_OF_HB*/ && !isDead; i++) {
+			if (hammerBros[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10))
+			{
+				hammerBros[i]->update(deltaTime, player->getPosition());
+				if (!hammerBros[i]->isDead())
+				{
+					if (player->dies(hammerBros[i]->getPosition(), hammerBros[i]->getSpriteSize()) ||
+						hammerBros[i]->collisionWithHammer(player->getPosition(), player->getSpriteSize()))
+					{
+						isDead = true;
+						setPlayerIniPos();
+					}
+					if (player->kills(hammerBros[i]->getPosition(), hammerBros[i]->getSpriteSize()))
+						hammerBros[i]->damage();
+				}
+			}
+		}
+	}
   
 	if (player->getPositionY() >= 12.5 * (map->getTileSize())) //caes al vacio*
 		setPlayerIniPos();
@@ -135,6 +136,11 @@ int Scene::update(int deltaTime)
     {
 			if (player->kills(sphere->getPos(), sphere->getSpriteSize())) sphere->damage();
 		}
+	}
+
+	if (level == 3)
+	{
+		lakitu->update(deltaTime);
 	}
 	
 	if (level == 1 && goalState1()) 
@@ -183,36 +189,41 @@ void Scene::render()
 	}
 		
 	player->render();
-  if (level == 1)
-	  interrogante->render();
+	if (level == 1) {
+		interrogante->render();
 
-  for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/; i++)
-	{
-		if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
+		for (int i = 0; i < 1/*NUMBER_OF_GOOMBAS*/; i++)
+		{
+			if (goomba[i]->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
 				goomba[i]->render();
+			}
 		}
+
+
+		for (int i = 0; i < 5; ++i)
+			hammerBros[i]->render(cameraX, SCREEN_WIDTH);
+
+		if (level == 2) {
+			sphere->render();
+			explosion->setPosition(glm::ivec2(146, 96));
+			explosion->render();
+			explosion->setPosition(glm::ivec2(120, 81));
+			explosion->render();
+			explosion->setPosition(glm::ivec2(157, 107));
+			explosion->render();
+			explosion->setPosition(glm::ivec2(160, 70));
+			explosion->render();
+		}
+
+		if (koopa->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
+			koopa->render();
+		}
+		
 	}
 
-
-	for (int i = 0; i < 5; ++i)
-		hammerBros[i]->render(cameraX, SCREEN_WIDTH);
-
-	if (level == 2) {
-		sphere->render();
-		explosion->setPosition(glm::ivec2(146 , 96));
-		explosion->render();
-		explosion->setPosition(glm::ivec2(120 , 81));
-		explosion->render();
-		explosion->setPosition(glm::ivec2(157 , 107));
-		explosion->render();
-		explosion->setPosition(glm::ivec2(160 , 70));
-		explosion->render();
-	}
-
-	if (koopa->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
-		koopa->render();
-	}
-	lakitu->render();
+	if (level == 3)
+		lakitu->render();
+	
 
 
 	//textLifes.render("Lifes: " + to_string(lives), glm::vec2(10, 10 + 32), 32, glm::vec4(1, 1, 1, 1));
@@ -272,7 +283,8 @@ void Scene::loadLevel(int lvl)
 	player->setTileMap(map);
 	player->setFrontal(false);
 	setPlayerIniPos();
-	loadEnemies(level);
+	if (lvl ==1)
+		loadEnemies(level);
 
 	if (lvl == 2)
 	{
@@ -295,7 +307,16 @@ void Scene::loadLevel(int lvl)
 
 		explosion = new Explosion();
 		explosion->init(glm::ivec2(152, 104), texProgram);
+		loadEnemies(level);
 		
+	}
+	else if (lvl == 3)
+	{
+		loadEnemies(level);
+		cameraState = FRONTAL;
+		//player->setFrontal(true);
+
+
 	}
 	else cameraState = SIDE_SCROLLER;
 }
@@ -305,10 +326,7 @@ void Scene::loadEnemies(int lvl)
 	switch (lvl)
 	{
 	case 1:  
-    lakitu = new Lakitu();
-	  lakitu->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
-	  lakitu->setTileMap(map);
-	  lakitu->setPosition(glm::vec2((5) * map->getTileSize(), 2 * map->getTileSize()));
+   
       
     interrogante = new block_interrogante();
 	  interrogante->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
@@ -370,6 +388,12 @@ void Scene::loadEnemies(int lvl)
 		hammerBros[1]->setPosition(glm::vec2((8) * map->getTileSize(),  5* map->getTileSize()));
 		hammerBros[2]->setPosition(glm::vec2((12) * map->getTileSize(), 5 * map->getTileSize()));
 
+	case 3:
+		lakitu = new Lakitu();
+		lakitu->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+		lakitu->setTileMap(map);
+		lakitu->setPosition(glm::vec2((5) * map->getTileSize(), 1 * map->getTileSize()));
+		lakitu->setMaxMinX(glm::vec2(0* map->getTileSize(), 18 * map->getTileSize()));
 	default:
 		break;
 	}
