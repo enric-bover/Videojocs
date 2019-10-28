@@ -56,7 +56,7 @@ private:
 	float cineTimer;
 	Explosion *explosion;
 
-	HammerBros* hammerBros;
+	HammerBros* hammerBros[5];
 
 };
 

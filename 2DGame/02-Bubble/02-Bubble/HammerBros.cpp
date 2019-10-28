@@ -5,9 +5,9 @@
 #include <GL/glut.h>
 #include "Balas.h"
 
-#define NUM_BALES 90
+#define NUM_BALES 20
 #define FALL_STEP 4
-
+#define FRAME_SHOOT 10
 
 enum HammerBrosAnims
 {
@@ -16,19 +16,13 @@ enum HammerBrosAnims
 
 void HammerBros::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
-	hp = 5;
+	hp = 3;
 	dead = false;
+	frontal = false;
 	direction = MOVE_LEFT;
 	spritesheet.loadFromFile("images/hammer_bros.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	spriteSize = glm::ivec2(16, 24);
-
-	//for (int i = 0; i < NUM_BALES; i++)
-	//{
-		//bales[i] = new Balas();
-		//bales[i]->init(tileMapPos, shaderProgram);
-		//bales[i]->setTileMap(map);
-	//}
 
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(6);
@@ -64,67 +58,126 @@ void HammerBros::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram
 	sprite->changeAnimation(direction);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	
+	for (int i = 0; i < NUM_BALES; i++)
+	{
+		bales[i] = new Balas();
+		bales[i]->init(tileMapPos, shaderProgram);
+		bales[i]->setTileMap(map);
+	}
 }
 
-void HammerBros::update(int deltaTime)
+void HammerBros::update(int deltaTime, glm::ivec2 posEnemy)
 {
 	sprite->update(deltaTime);
+	if (canShoot < FRAME_SHOOT)
+		canShoot++;
+	if (actualHammer >= NUM_BALES - 5) actualHammer = 0;
 	if ((sprite->animation() == DIE_LEFT || sprite->animation() == DIE_RIGHT) && sprite->lastKeyFrame())
 		dead = true;
 	if (hp > 0) {
-		posPlayer.y += FALL_STEP;
-		bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
-		if (map->collisionMoveLeft(posPlayer, spriteSize))
+		this->posPlayer.y += FALL_STEP;
+		bJumping = !map->collisionMoveDown(this->posPlayer, spriteSize, &(this->posPlayer.y));
+
+		if (map->collisionMoveLeft(this->posPlayer, spriteSize))
 			direction = MOVE_RIGHT;
-		else if (map->collisionMoveRight(posPlayer, spriteSize))
+		else if (map->collisionMoveRight(this->posPlayer, spriteSize))
 			direction = MOVE_LEFT;
+		else
+		{
+			if (posPlayer.x > posEnemy.x)
+			{
+				if (posPlayer.x - posEnemy.x < 120 && posPlayer.x - posEnemy.x > 20)
+					direction = ATTACK_LEFT;
+				else
+					direction = MOVE_LEFT;
+			}
+			else if (posPlayer.x < posEnemy.x)
+			{
+				if (posEnemy.x - posPlayer.x < 120 && posEnemy.x - posPlayer.x > 20)
+					direction = ATTACK_RIGHT;
+				else
+					direction = MOVE_RIGHT;
+			}
+		}
 
 		if (direction == MOVE_LEFT)
 		{
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
-			posPlayer.x -= 1;
+			this->posPlayer.x -= 1;
 		}
 		else if (direction == MOVE_RIGHT)
 		{
 			if (sprite->animation() != MOVE_RIGHT)
 				sprite->changeAnimation(MOVE_RIGHT);
-			posPlayer.x += 1;
+			this->posPlayer.x += 1;
 		}
-		else if (direction == ATTACK_LEFT && sprite->lastKeyFrame())
+		else if (direction == ATTACK_LEFT) 
 		{
-			sprite->changeAnimation(MOVE_LEFT);
-			posPlayer.x -= 1;
-
-		}
-		else
+			if (sprite->animation() != ATTACK_LEFT) 
+				sprite->changeAnimation(ATTACK_LEFT);
+			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
+		}	
+		else if (direction == ATTACK_RIGHT)
 		{
-			sprite->changeAnimation(MOVE_RIGHT);
-			posPlayer.x -= 1;
+			if (sprite->animation() != ATTACK_RIGHT)
+				sprite->changeAnimation(ATTACK_RIGHT);
+			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
 		}
-
-		//if (sprite->lastKeyFrame())
-		//{
-			//if (direction == MOVE_LEFT && ((double)rand() / (RAND_MAX)) < 0.005)
-				//direction = ATTACK_LEFT;
-			//else if (direction == MOVE_RIGHT && ((double)rand() / (RAND_MAX)) < 0.005)
-				//direction = ATTACK_RIGHT;
-		//}
 	}
 	else
 	{
-		if (direction == DIE_LEFT && sprite->animation() != DIE_LEFT)
+		if ((direction == MOVE_LEFT || direction == ATTACK_LEFT) && sprite->animation() != DIE_LEFT)
 			sprite->changeAnimation(DIE_LEFT);
-		else if (direction == DIE_RIGHT && sprite->animation() != DIE_RIGHT)
+		else if ((direction == MOVE_RIGHT || direction == ATTACK_RIGHT) && sprite->animation() != DIE_RIGHT)
 			sprite->changeAnimation(DIE_RIGHT);
 	}
 
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + this->posPlayer.x), float(tileMapDispl.y + this->posPlayer.y)));
+
+	for (int i = 0; i < NUM_BALES; i++)
+	{
+		bales[i]->update(deltaTime);
+	}
 }
 
-//void HammerBros::render()
-//{
-	//if (!dead)
-		//sprite->render();
-//}
+void HammerBros::render(float cameraX, float cameraWidht)
+{
+	if (posPlayer.x < cameraX + cameraWidht + 10 && hp)
+	{
+		if (hp > 0)
+			sprite->render();
+		else if (!dead)
+			sprite->render();
+		for (int i = 0; i < NUM_BALES; i++)
+			bales[i]->render();
+	}
+}
 
+void HammerBros::setMode(int mode) {
+	if (mode == 1) frontal = false;
+	else frontal = true;
+}
+
+bool HammerBros::collisionWithHammer(glm::ivec2 pos, glm::ivec2 size) {
+	for (int i = 0; i < NUM_BALES; i++)
+		if (bales[i]->kills(pos, size))
+			return true;
+	return false;
+}
+
+void HammerBros::shoot(const glm::vec2& pos, glm::ivec2 posEnemy)
+{
+	bool up = false;
+	bool down = false;
+	if (canShoot >= FRAME_SHOOT) {
+		float x = posEnemy.x - posPlayer.x;
+		float y = posEnemy.y - posPlayer.y;
+		float mod = sqrt(x * x + y * y);
+		glm::vec2 velocitat = glm::vec2(x/mod, y/mod);
+		bales[actualHammer]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
+		canShoot = 0;
+		actualHammer += 1;
+	}
+}

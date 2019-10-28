@@ -734,3 +734,12 @@ void Player::setRunUpAnimation() {
 int Player::getRound() {
 	return round;
 }
+
+glm::ivec2 Player::getPosition() {
+	return posPlayer;
+}
+
+glm::vec2 Player::getSpriteSize()
+{
+	return spriteSize;
+}

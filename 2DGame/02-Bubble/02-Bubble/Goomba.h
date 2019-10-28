@@ -22,9 +22,11 @@ public:
 	void setPosition(const glm::vec2& pos);
 	int getPositionX();
 	int getPositionY();
+	glm::ivec2 getPosition();
 	bool isDead();
 	void damage();
 	glm::vec2 getSpriteSize();
+	void revive();
 	 
 
 private:

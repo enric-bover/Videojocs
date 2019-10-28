@@ -24,11 +24,13 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	int getPositionX();
 	int getPositionY();
+	glm::ivec2 getPosition();
 	bool dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 	bool kills(const glm::vec2& posEnemie, const glm::ivec2& sizeTile);
 	void setFrontal(bool b);
 	void setRunUpAnimation();
 	int getRound();
+	glm::vec2 getSpriteSize();
 
 private:
 	void shoot(const glm::vec2& pos, int angle);

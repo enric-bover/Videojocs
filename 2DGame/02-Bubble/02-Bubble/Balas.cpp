@@ -77,8 +77,8 @@ void Balas::update(int deltaTime)
 
 	if (alive)
 	{
-		posPlayer.x += 2*velocitat.x;
-		posPlayer.y += 2*velocitat.y;
+		posPlayer.x += 2.0f*velocitat.x;
+		posPlayer.y += 2.0f*velocitat.y;
 	}
 	
 	if(this->hit)
@@ -111,7 +111,7 @@ void Balas::setTileMap(TileMap* tileMap)
 	map = tileMap;
 }
 
-void Balas::setPosition(const glm::vec2& pos, glm::ivec2 vel)
+void Balas::setPosition(const glm::vec2& pos, glm::vec2 vel)
 {
 	posPlayer = pos;
 	alive = true;
