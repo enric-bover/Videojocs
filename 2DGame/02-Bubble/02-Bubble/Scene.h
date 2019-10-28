@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Goomba.h"
 #include "Koopa.h"
+#include "Lakitu.h"
 #include "block_interrogante.h"
 
 
@@ -39,6 +40,7 @@ private:
 	block_interrogante* interrogante;
 	Goomba *goomba[20];
 	Koopa* koopa;
+	Lakitu* lakitu;
 	ShaderProgram texProgram;
 	bool first;
 	float currentTime;

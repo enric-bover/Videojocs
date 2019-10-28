@@ -54,6 +54,7 @@ int Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	interrogante->update(deltaTime);
+	lakitu->update(deltaTime);
 	bool isDead = false;
 	for (int i = 0; i < 1 && !isDead; i++) {
 		if (goomba[i]->getPositionX() < cameraX + float(CAMERA_WIDTH + 10)) {
@@ -140,6 +141,7 @@ void Scene::render()
 	if (koopa->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
 		koopa->render();
 	}
+	lakitu->render();
 
 	//textLifes.render("Lifes: " + to_string(lives), glm::vec2(10, 10 + 32), 32, glm::vec4(1, 1, 1, 1));
 }
@@ -224,7 +226,10 @@ void Scene::loadEnemies1()
 	koopa->setTileMap(map);
 	koopa->setPosition(glm::vec2((20) * map->getTileSize(), 1 * map->getTileSize()));
 
-	
+	lakitu = new Lakitu();
+	lakitu->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
+	lakitu->setTileMap(map);
+	lakitu->setPosition(glm::vec2((5) * map->getTileSize(), 2 * map->getTileSize()));
 	//FICAR LES COORDENADES INICALS DELS GOOMBAS EN ALGUN ARXIU EXTERN
 	goomba[0]->setPosition(glm::vec2((6) * map->getTileSize(), 8 * map->getTileSize()));
 	/*goomba[1]->setPosition(glm::vec2((8) * map->getTileSize(), 8 * map->getTileSize()));
