@@ -296,18 +296,21 @@ void Scene::loadEnemies(int lvl)
 			hammerBros[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
 			hammerBros[i]->setTileMap(map);
 		}
-		hammerBros[0]->setPosition(glm::vec2((18) * map->getTileSize(), 10 * map->getTileSize()));
-		hammerBros[1]->setPosition(glm::vec2((25) * map->getTileSize(), 10 * map->getTileSize()));
-		hammerBros[2]->setPosition(glm::vec2((35) * map->getTileSize(), 10 * map->getTileSize()));
-		hammerBros[3]->setPosition(glm::vec2((48) * map->getTileSize(), 10 * map->getTileSize()));
-		hammerBros[4]->setPosition(glm::vec2((55) * map->getTileSize(), 10 * map->getTileSize()));
+		hammerBros[0]->setPosition(glm::vec2((38) * map->getTileSize(), 10 * map->getTileSize()));
+		hammerBros[1]->setPosition(glm::vec2((55) * map->getTileSize(), 10 * map->getTileSize()));
+		hammerBros[2]->setPosition(glm::vec2((95) * map->getTileSize(), 10 * map->getTileSize()));
+		hammerBros[3]->setPosition(glm::vec2((158) * map->getTileSize(), 10 * map->getTileSize()));
+		hammerBros[4]->setPosition(glm::vec2((165) * map->getTileSize(), 10 * map->getTileSize()));
 		break;
 	case 2:
-		for (int i = 0; i < 5/*NUMBER_OF_HB*/; i++)
+		for (int i = 0; i < 3/*NUMBER_OF_HB*/; i++)
 		{
 			hammerBros[i]->revive();
 			hammerBros[i]->setTileMap(map);
 		}
+		hammerBros[0]->setPosition(glm::vec2((7) * map->getTileSize(), 10 * map->getTileSize()));
+		hammerBros[1]->setPosition(glm::vec2((8) * map->getTileSize(), 10 * map->getTileSize()));
+		hammerBros[2]->setPosition(glm::vec2((12) * map->getTileSize(), 10 * map->getTileSize()));
 
 	default:
 		break;

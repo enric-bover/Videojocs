@@ -144,7 +144,7 @@ void HammerBros::update(int deltaTime, glm::ivec2 posEnemy)
 
 void HammerBros::render(float cameraX, float cameraWidht)
 {
-	if (posPlayer.x < cameraX + cameraWidht + 10 && hp)
+	if (posPlayer.x < cameraX + cameraWidht + 10)
 	{
 		if (hp > 0)
 			sprite->render();
