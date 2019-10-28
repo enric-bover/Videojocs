@@ -7,7 +7,7 @@
 
 #define NUM_BALES 20
 #define FALL_STEP 4
-#define FRAME_SHOOT 10
+#define FRAME_SHOOT 50
 
 enum HammerBrosAnims
 {
