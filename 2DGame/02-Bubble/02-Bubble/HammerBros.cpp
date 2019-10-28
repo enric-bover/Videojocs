@@ -7,7 +7,7 @@
 
 #define NUM_BALES 20
 #define FALL_STEP 4
-#define FRAME_SHOOT 50
+#define FRAME_SHOOT 70
 
 enum HammerBrosAnims
 {
@@ -175,7 +175,7 @@ void HammerBros::shoot(const glm::vec2& pos, glm::ivec2 posEnemy)
 		float x = posEnemy.x - posPlayer.x;
 		float y = posEnemy.y - posPlayer.y;
 		float mod = sqrt(x * x + y * y);
-		glm::vec2 velocitat = glm::vec2(x/mod, y/mod);
+		glm::vec2 velocitat = glm::vec2(1.3f*x/mod, 1.3f*y/mod);
 		bales[actualHammer]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
 		canShoot = 0;
 		actualHammer += 1;

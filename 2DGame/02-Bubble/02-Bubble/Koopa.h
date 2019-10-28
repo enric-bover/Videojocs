@@ -5,6 +5,10 @@
 #include "Sprite.h"
 #include "TileMap.h"
 
+#include <irrKlang.h>
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib")
+
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
@@ -38,6 +42,8 @@ private:
 	int hp;
 	int direction;
 	bool dead;
+
+	ISoundEngine* engine;
 
 };
 

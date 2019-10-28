@@ -3,6 +3,10 @@
 #include "Sprite.h"
 #include "TileMap.h"
 
+#include <irrKlang.h>
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib")
+
 class Explosion
 {
 public:
@@ -20,5 +24,7 @@ private:
 	Texture spritesheet;
 	Sprite* sprite;
 	bool end;
+
+	ISoundEngine* engine;
 };
 

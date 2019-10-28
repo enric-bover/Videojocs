@@ -13,6 +13,7 @@ enum ExplosionAnimation
 
 void Explosion::init(const glm::ivec2& pos, ShaderProgram& shaderProgram)
 {
+	engine = createIrrKlangDevice();
 	end = true;
 	spriteSize = glm::ivec2(32, 32);
 	spritesheet.loadFromFile("images/explosion.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -65,6 +66,7 @@ glm::vec2 Explosion::getPos()
 }
 
 void Explosion::start() {
+	engine->play2D("music/explosion.mp3");
 	end = false;
 }
 

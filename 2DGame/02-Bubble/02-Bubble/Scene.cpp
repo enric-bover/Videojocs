@@ -4,6 +4,8 @@
 #include "Scene.h"
 #include "Game.h"
 
+
+
 // --
 #define CAMERA_X 0
 #define CAMERA_Y 0
@@ -37,6 +39,8 @@ Scene::~Scene()
 
 void Scene::init()
 {
+	engine = createIrrKlangDevice();
+	engine->play2D("music/super_mario.mp3", true);
 	initShaders();
 	player = new Player();
 	player->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
@@ -141,7 +145,12 @@ int Scene::update(int deltaTime)
 		loadLevel(2);
 	else if (level == 2 && goalState2()) {
 		cineTimer += deltaTime;
-		if (cineTimer < 50) explosion->start();
+		if (cineTimer < 50)
+		{
+			explosion->start();
+			for (int i = 0; i < 5; ++i)
+				hammerBros[i]->kill();
+		}
 		explosion->update(deltaTime);
 		if (cineTimer > 300) {
 			imageBgS2.loadFromFile("images/stage2_0.png", TEXTURE_PIXEL_FORMAT_RGBA);
