@@ -99,15 +99,17 @@ void Spinny::update(int deltaTime)
 		{
 			if (sprite->animation() != DIE)
 				sprite->changeAnimation(DIE);
+
+		}
+		if (posPlayer.y > (13.5 * map->getTileSize()))
+		{
+			dead = true;
+			hp = 0;
 		}
 
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	if (posPlayer.y > (13.5 * map->getTileSize()))
-	{
-		dead = true;
-		hp = 0;
-	}
+
 }
 
 void Spinny::render()
@@ -129,7 +131,7 @@ void Spinny::setPosition(const glm::vec2& pos)
 	posPlayer = pos;
 	dead = false;
 	first_contact = false;
-	hp = 5;
+	hp = 2;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 

@@ -27,6 +27,13 @@ public:
 	void damage();
 	void setMaxMinX(const glm::vec2& pos);
 	bool activeEnemies();
+	int getNumEnemies();
+	int getPositionXEnemie(int numEnemie);
+	int getPositionYEnemie(int numEnemie);
+	void damageEnemie(int numEnemie);
+
+	bool enemieLives(int numEnemie);
+	glm::vec2 getSpriteSizeEnemies();
 	glm::vec2 getSpriteSize();
 
 private:

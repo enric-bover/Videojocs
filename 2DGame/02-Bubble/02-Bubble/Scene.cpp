@@ -155,6 +155,23 @@ int Scene::update(int deltaTime)
 			if (player->kills(glm::ivec2(lakitu->getPositionX(), lakitu->getPositionY()), lakitu->getSpriteSize()))
 				lakitu->damage();
 		}
+		if (lakitu->activeEnemies())
+		{
+			int numEnemies = lakitu->getNumEnemies();
+			for (int i = 0; i < numEnemies; i++)
+			{
+				if (lakitu->enemieLives(i))
+				{
+					glm::ivec2 posEnemie = glm::ivec2(lakitu->getPositionXEnemie(i), lakitu->getPositionYEnemie(i));
+					if (player->dies(posEnemie, lakitu->getSpriteSizeEnemies()))
+					{
+						setPlayerIniPos();
+					}
+					if (player->kills(posEnemie, lakitu->getSpriteSizeEnemies()))
+						lakitu->damageEnemie(i);
+				}
+			}
+		}
 	}
 
 	

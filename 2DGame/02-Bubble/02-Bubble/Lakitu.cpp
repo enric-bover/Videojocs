@@ -236,6 +236,11 @@ glm::vec2 Lakitu::getSpriteSize()
 	return spriteSize;
 }
 
+glm::vec2 Lakitu::getSpriteSizeEnemies()
+{
+	return spinny[0]->getSpriteSize();
+}
+
 bool Lakitu::isDead()
 {
 	return (hp <= 0);
@@ -246,6 +251,11 @@ void Lakitu::damage()
 	hp--;
 }
 
+void Lakitu::damageEnemie(int numEnemie)
+{
+	spinny[numEnemie]->damage();
+}
+
 int Lakitu::livingSpinny()
 {
 	for (int i = 0; i < 5; i++)
@@ -254,4 +264,33 @@ int Lakitu::livingSpinny()
 			return i;
 	}
 	return -1;
+}
+
+bool Lakitu::activeEnemies()
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (spinny[i]->isActive())
+			return true;
+	}
+	return false;
+}
+int Lakitu::getNumEnemies()
+{
+	return 5;
+}
+
+bool Lakitu::enemieLives(int numEnemie)
+{
+	return spinny[numEnemie]->isActive();
+}
+
+int Lakitu::getPositionXEnemie(int numEnemie)
+{
+	return spinny[numEnemie]->getPositionX();
+}
+int Lakitu::getPositionYEnemie(int numEnemie)
+{
+	return spinny[numEnemie]->getPositionY();
+
 }
