@@ -7,7 +7,7 @@
 
 #define NUM_BALES 20
 #define FALL_STEP 4
-#define FRAME_SHOOT 70
+#define FRAME_SHOOT 20
 
 enum HammerBrosAnims
 {
@@ -49,7 +49,7 @@ void HammerBros::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram
 	sprite->addKeyframe(DIE_LEFT, glm::vec2(0.25f, 0.5f));
 	sprite->addKeyframe(DIE_LEFT, glm::vec2(0.5f, 0.5f));
 	sprite->addKeyframe(DIE_LEFT, glm::vec2(0.75f, 0.5f));
-
+	      
 	sprite->setAnimationSpeed(DIE_RIGHT, 8);
 	sprite->addKeyframe(DIE_RIGHT, glm::vec2(0.75f, 0.75f));
 	sprite->addKeyframe(DIE_RIGHT, glm::vec2(0.5f, 0.75f));
@@ -101,7 +101,7 @@ void HammerBros::update(int deltaTime, glm::ivec2 posEnemy)
 						direction = MOVE_RIGHT;
 				}
 			}
-			else if (newAction < 0.56)
+			else if (newAction < 0.65)
 				direction = MOVE_LEFT;
 			else
 				direction = MOVE_RIGHT;
@@ -137,56 +137,6 @@ void HammerBros::update(int deltaTime, glm::ivec2 posEnemy)
 			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
 		}
 	}
-
-		/*this->posPlayer.y += FALL_STEP;
-		bJumping = !map->collisionMoveDown(this->posPlayer, spriteSize, &(this->posPlayer.y));
-
-		if (map->collisionMoveLeft(this->posPlayer, spriteSize))
-			direction = MOVE_RIGHT;
-		else if (map->collisionMoveRight(this->posPlayer, spriteSize))
-			direction = MOVE_LEFT;
-		else
-		{
-			if (posPlayer.x > posEnemy.x)
-			{
-				if (posPlayer.x - posEnemy.x < 120 && posPlayer.x - posEnemy.x > 20)
-					direction = ATTACK_LEFT;
-				else
-					direction = MOVE_LEFT;
-			}
-			else if (posPlayer.x < posEnemy.x)
-			{
-				if (posEnemy.x - posPlayer.x < 120 && posEnemy.x - posPlayer.x > 20)
-					direction = ATTACK_RIGHT;
-				else
-					direction = MOVE_RIGHT;
-			}
-		}
-
-		if (direction == MOVE_LEFT)
-		{
-			if (sprite->animation() != MOVE_LEFT)
-				sprite->changeAnimation(MOVE_LEFT);
-			this->posPlayer.x -= 1;
-		}
-		else if (direction == MOVE_RIGHT)
-		{
-			if (sprite->animation() != MOVE_RIGHT)
-				sprite->changeAnimation(MOVE_RIGHT);
-			this->posPlayer.x += 1;
-		}
-		else if (direction == ATTACK_LEFT) 
-		{
-			if (sprite->animation() != ATTACK_LEFT) 
-				sprite->changeAnimation(ATTACK_LEFT);
-			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
-		}	
-		else if (direction == ATTACK_RIGHT)
-		{
-			if (sprite->animation() != ATTACK_RIGHT)
-				sprite->changeAnimation(ATTACK_RIGHT);
-			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
-		}*/
 	else
 	{
 		if ((direction == MOVE_LEFT || direction == ATTACK_LEFT) && sprite->animation() != DIE_LEFT)
