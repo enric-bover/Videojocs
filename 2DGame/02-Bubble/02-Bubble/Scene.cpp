@@ -61,6 +61,16 @@ int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+
+	if (level == 2)
+	{
+		sphere->update(deltaTime);
+		if (!sphere->isDead())
+		{
+			if (player->kills(sphere->getPos(), sphere->getSpriteSize())) sphere->damage();
+		}
+	}
+
 	if(level ==1)
 	{
 		interrogante->update(deltaTime);
@@ -133,15 +143,6 @@ int Scene::update(int deltaTime)
 		setPlayerIniPos();
 
 
-	if (level == 2)
-	{
-		sphere->update(deltaTime);
-		if (!sphere->isDead()) 
-    {
-			if (player->kills(sphere->getPos(), sphere->getSpriteSize())) sphere->damage();
-		}
-	}
-
 	if (level == 3)
 	{	
 		lakitu->update(deltaTime);
@@ -155,6 +156,7 @@ int Scene::update(int deltaTime)
 				lakitu->damage();
 		}
 	}
+
 	
 	if (level == 1 && goalState1()) 
 		loadLevel(2);
@@ -205,7 +207,17 @@ void Scene::render()
 			fireBar->render(imageFireBar);
 		}
 	}
-		
+	if (level == 2) {
+		sphere->render();
+		explosion->setPosition(glm::ivec2(146, 96));
+		explosion->render();
+		explosion->setPosition(glm::ivec2(120, 81));
+		explosion->render();
+		explosion->setPosition(glm::ivec2(157, 107));
+		explosion->render();
+		explosion->setPosition(glm::ivec2(160, 70));
+		explosion->render();
+	}
 	player->render();
 	if (level == 1) {
 		interrogante->render();
@@ -216,22 +228,9 @@ void Scene::render()
 				goomba[i]->render();
 			}
 		}
-
-
 		for (int i = 0; i < 5; ++i)
 			hammerBros[i]->render(cameraX, SCREEN_WIDTH);
 
-		if (level == 2) {
-			sphere->render();
-			explosion->setPosition(glm::ivec2(146, 96));
-			explosion->render();
-			explosion->setPosition(glm::ivec2(120, 81));
-			explosion->render();
-			explosion->setPosition(glm::ivec2(157, 107));
-			explosion->render();
-			explosion->setPosition(glm::ivec2(160, 70));
-			explosion->render();
-		}
 
 		if (koopa->getPositionX() < cameraX + float(SCREEN_WIDTH + 10)) {
 			koopa->render();
