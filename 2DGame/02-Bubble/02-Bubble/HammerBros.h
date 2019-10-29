@@ -25,6 +25,7 @@ private:
 	Balas* bales[90];
 	int canShoot;
 	bool frontal;
+	int actionTimer;
 
 };
 
