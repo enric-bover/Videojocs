@@ -137,7 +137,7 @@ void Lakitu::update(int deltaTime)
 		}
 		else
 		{
-			if ((actualSpinny > 0) && throwSpinny)
+			if ((actualSpinny >= 0) && throwSpinny)
 			{
 				if (sprite->animation() == THROW_LEFT)
 				{
@@ -171,6 +171,7 @@ void Lakitu::update(int deltaTime)
 				dead = true;
 	}
 	sprite->update(deltaTime);
+
 	for (int i = 0; i < 5; i++)
 	{
 		spinny[i]->update(deltaTime);

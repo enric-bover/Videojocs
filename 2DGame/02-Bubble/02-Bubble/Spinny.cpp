@@ -114,9 +114,7 @@ void Spinny::update(int deltaTime)
 
 void Spinny::render()
 {
-	if (hp > 0)
-		sprite->render();
-	else if (!dead)
+	 if (!dead)
 		sprite->render();
 
 }
@@ -132,6 +130,7 @@ void Spinny::setPosition(const glm::vec2& pos)
 	dead = false;
 	first_contact = false;
 	hp = 2;
+	bJumping = false;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
@@ -158,6 +157,7 @@ bool Spinny::isDead()
 void Spinny::damage()
 {
 	hp--;
+	if (hp <= 0) dead = true;
 }
 
 
