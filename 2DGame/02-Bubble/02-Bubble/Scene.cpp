@@ -427,7 +427,7 @@ void Scene::loadEnemies(int lvl)
 		lakitu->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
 		lakitu->setTileMap(map);
 		lakitu->setPosition(glm::vec2((5) * map->getTileSize(), 1 * map->getTileSize()));
-		lakitu->setMaxMinX(glm::vec2(0* map->getTileSize(), 18 * map->getTileSize()));
+		lakitu->setMaxMinX(glm::vec2(1* map->getTileSize(), 17 * map->getTileSize()));
 	default:
 		break;
 	}

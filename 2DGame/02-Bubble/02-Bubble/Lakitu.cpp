@@ -22,7 +22,7 @@ enum LakituAnimations
 void Lakitu::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram/*, const glm::ivec2& MinMaxX*/)
 {
 	bJumping = false;
-	hp = 3;
+	hp = 10;
 	throwSpinny = false;
 	countThrow = 0;
 	movementy = 0;
