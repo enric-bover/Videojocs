@@ -93,6 +93,7 @@ void Lakitu::update(int deltaTime)
 {
 	movementy++;
 	countThrow++;
+	int actualSpinny;
 	if (countThrow >= FREQUENCY)
 	{
 		countThrow = 0;
@@ -109,13 +110,13 @@ void Lakitu::update(int deltaTime)
 		posPlayer.y -= (movementy % 3) % 2;
 	}
 	int frame = sprite->getCurrentKeyFrame();
+	actualSpinny = livingSpinny();
 	if (hp > 0)
 	{
 		if (direction == MOVE_LEFT)
 		{
-			if (throwSpinny)
+			if ((actualSpinny >= 0) && throwSpinny)
 			{
-
 				if (sprite->animation() == THROW_RIGHT)
 				{
 					sprite->changeAnimation(THROW_LEFT);
@@ -125,7 +126,10 @@ void Lakitu::update(int deltaTime)
 					sprite->changeAnimation(THROW_LEFT);
 
 				if (sprite->lastKeyFrame())
+				{
 					throwSpinny = false;
+					spinny[actualSpinny]->setPosition(posPlayer);
+				}
 			}
 			else if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
@@ -133,7 +137,7 @@ void Lakitu::update(int deltaTime)
 		}
 		else
 		{
-			if (throwSpinny)
+			if ((actualSpinny > 0) && throwSpinny)
 			{
 				if (sprite->animation() == THROW_LEFT)
 				{
@@ -143,7 +147,10 @@ void Lakitu::update(int deltaTime)
 				else if (sprite->animation() != THROW_RIGHT)
 					sprite->changeAnimation(THROW_RIGHT);
 				else if (sprite->lastKeyFrame())
+				{
 					throwSpinny = false;
+					spinny[actualSpinny]->setPosition(posPlayer);
+				}
 			}
 			else if (sprite->animation() != MOVE_RIGHT)
 				sprite->changeAnimation(MOVE_RIGHT);
@@ -164,6 +171,10 @@ void Lakitu::update(int deltaTime)
 				dead = true;
 	}
 	sprite->update(deltaTime);
+	for (int i = 0; i < 5; i++)
+	{
+		spinny[i]->update(deltaTime);
+	}
 	
 	if (posPlayer.x < MinX)
 		direction = MOVE_RIGHT;
@@ -180,6 +191,9 @@ void Lakitu::render()
 	else if (!dead)
 		sprite->render();
 
+	for (int i = 0; i < 5; i++)
+		spinny[i]->render();
+
 }
 
 void Lakitu::setTileMap(TileMap* tileMap)
@@ -195,10 +209,10 @@ void Lakitu::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	for (int i = 0; i < 5; i++)
+	/*for (int i = 0; i < 5; i++)
 	{
 		spinny[i]->setPosition(pos);
-	}
+	}*/
 }
 
 void Lakitu::setMaxMinX(const glm::vec2& pos)
@@ -236,7 +250,7 @@ int Lakitu::livingSpinny()
 {
 	for (int i = 0; i < 5; i++)
 	{
-		if (spinny[i]->isDead())
+		if (!spinny[i]->isActive())
 			return i;
 	}
 	return -1;

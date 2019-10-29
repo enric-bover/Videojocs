@@ -26,7 +26,7 @@ public:
 	bool isDead();
 	void damage();
 	void setMaxMinX(const glm::vec2& pos);
-
+	bool activeEnemies();
 	glm::vec2 getSpriteSize();
 
 private:

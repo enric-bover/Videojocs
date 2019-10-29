@@ -21,8 +21,9 @@ enum SpinnyAnimations
 void Spinny::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	bJumping = false;
-	hp = 3;
+	hp = 0;
 	dead = true;
+	first_contact = false;
 	direction = MOVE_LEFT;
 	spriteSize = glm::ivec2(18, 18);
 	spritesheet.loadFromFile("images/goombaTiles2.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -62,6 +63,16 @@ void Spinny::update(int deltaTime)
 		if (hp > 0) {
 			posPlayer.y += FALL_STEP;
 			bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+			if (!bJumping)
+				first_contact = true;
+			if (first_contact && bJumping)
+			{
+				posPlayer.y -= FALL_STEP;
+				if (direction == MOVE_RIGHT)
+					direction = MOVE_LEFT;
+				else direction = MOVE_RIGHT;
+			}
+
 			if (map->collisionMoveLeft(posPlayer, spriteSize))
 			{
 				direction = MOVE_RIGHT;
@@ -92,6 +103,11 @@ void Spinny::update(int deltaTime)
 
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
+	if (posPlayer.y > (13.5 * map->getTileSize()))
+	{
+		dead = true;
+		hp = 0;
+	}
 }
 
 void Spinny::render()
@@ -112,6 +128,8 @@ void Spinny::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
 	dead = false;
+	first_contact = false;
+	hp = 5;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
@@ -143,5 +161,5 @@ void Spinny::damage()
 
 bool Spinny::isActive()
 {
-	return isDead;
+	return !dead;
 }

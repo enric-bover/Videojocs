@@ -39,6 +39,7 @@ private:
 	int hp;
 	int direction;
 	bool dead;
+	bool first_contact;
 
 };
 
