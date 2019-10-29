@@ -14,7 +14,7 @@
 
 enum SpinnyAnimations
 {
-	MOVE_RIGHT, MOVE_LEFT, DIE
+	MOVE_RIGHT, MOVE_LEFT, FALL
 };
 
 
@@ -25,28 +25,30 @@ void Spinny::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	dead = true;
 	first_contact = false;
 	direction = MOVE_LEFT;
-	spriteSize = glm::ivec2(18, 18);
-	spritesheet.loadFromFile("images/goombaTiles2.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1667, 1.0), &spritesheet, &shaderProgram);
+	spriteSize = glm::ivec2(20, 18);
+	spritesheet.loadFromFile("images/Spinny.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	sprite = Sprite::createSprite(spriteSize, glm::vec2(0.1429, 0.5), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 8);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.1667, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.5f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.1429f, 0.5f));
 
 	sprite->setAnimationSpeed(MOVE_RIGHT, 8);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.1667, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.1429f, 0.0f));
+
+	sprite->setAnimationSpeed(FALL, 15);
+	sprite->addKeyframe(FALL, glm::vec2(0.2857f, 0.0f));
+	sprite->addKeyframe(FALL, glm::vec2(0.4286f, 0.0f));
+	sprite->addKeyframe(FALL, glm::vec2(0.5714, 0.0f));
+	sprite->addKeyframe(FALL, glm::vec2(0.7143, 0.0f));
 
 
-	sprite->setAnimationSpeed(DIE, 15);
-	sprite->addKeyframe(DIE, glm::vec2(0.3333f, 0.0f));
-	sprite->addKeyframe(DIE, glm::vec2(0.5f, 0.0f));
-	sprite->addKeyframe(DIE, glm::vec2(0.6667f, 0.0f));
-	sprite->addKeyframe(DIE, glm::vec2(0.8333f, 0.0f));
 
 
-	sprite->changeAnimation(MOVE_LEFT);
+
+	sprite->changeAnimation(FALL);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
@@ -58,16 +60,19 @@ void Spinny::update(int deltaTime)
 	if (!dead)
 	{
 		sprite->update(deltaTime);
-		if ((sprite->animation() == DIE) && sprite->lastKeyFrame())
-			dead = true;
 		if (hp > 0) {
-			posPlayer.y += FALL_STEP;
+			posPlayer.y += FALL_STEP -2;
 			bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+			if (!first_contact)
+			{
+				if (sprite->animation() != FALL)
+					sprite->changeAnimation(FALL);
+			}
 			if (!bJumping)
 				first_contact = true;
 			if (first_contact && bJumping)
 			{
-				posPlayer.y -= FALL_STEP;
+				posPlayer.y -= FALL_STEP -2;
 				if (direction == MOVE_RIGHT)
 					direction = MOVE_LEFT;
 				else direction = MOVE_RIGHT;
@@ -81,25 +86,22 @@ void Spinny::update(int deltaTime)
 			{
 				direction = MOVE_LEFT;
 			}
-
-			if (direction == MOVE_LEFT)
+			if (first_contact)
 			{
-				if (sprite->animation() != MOVE_LEFT)
-					sprite->changeAnimation(MOVE_LEFT);
-				posPlayer.x -= 1;
+				if (direction == MOVE_LEFT)
+				{
+					if (sprite->animation() != MOVE_LEFT)
+						sprite->changeAnimation(MOVE_LEFT);
+					posPlayer.x -= 1;
+				}
+				else
+				{
+					if (sprite->animation() != MOVE_RIGHT)
+						sprite->changeAnimation(MOVE_RIGHT);
+					posPlayer.x += 1;
+				}
 			}
-			else
-			{
-				if (sprite->animation() != MOVE_RIGHT)
-					sprite->changeAnimation(MOVE_RIGHT);
-				posPlayer.x += 1;
-			}
-		}
-		else
-		{
-			if (sprite->animation() != DIE)
-				sprite->changeAnimation(DIE);
-
+			
 		}
 		if (posPlayer.y > (13.5 * map->getTileSize()))
 		{
