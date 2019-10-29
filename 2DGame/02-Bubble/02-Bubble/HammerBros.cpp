@@ -237,6 +237,8 @@ void HammerBros::shoot(const glm::vec2& pos, glm::ivec2 posEnemy)
 		float y = posEnemy.y - posPlayer.y;
 		float mod = sqrt(x * x + y * y);
 		glm::vec2 velocitat = glm::vec2(1.3f*x/mod, 1.3f*y/mod);
+		if (frontal) 
+			velocitat = glm::vec2(0, 1);
 		bales[actualHammer]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
 		canShoot = 0;
 		actualHammer += 1;
