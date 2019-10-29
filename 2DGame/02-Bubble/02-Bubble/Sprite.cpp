@@ -116,5 +116,10 @@ bool Sprite::lastKeyFrame()
 	return (animations[currentAnimation].keyframeDispl.size() - 1) == currentKeyframe;
 }
 
+void Sprite::setCurrentFrame(int newCurrent)
+{
+	currentKeyframe = newCurrent;
+}
+
 
 

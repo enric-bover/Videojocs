@@ -10,6 +10,7 @@
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
 #define SPEED 0.12
+#define FREQUENCY 120
 
 
 enum LakituAnimations
@@ -21,7 +22,9 @@ enum LakituAnimations
 void Lakitu::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram/*, const glm::ivec2& MinMaxX*/)
 {
 	bJumping = false;
-	hp = 15;
+	hp = 3;
+	throwSpinny = false;
+	countThrow = 0;
 	movementy = 0;
 	dead = false;
 	direction = MOVE_LEFT;
@@ -76,40 +79,95 @@ void Lakitu::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram/*, 
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
+	for (int i = 0; i < 5; i++)
+	{
+		spinny[i] = new Spinny();
+		spinny[i]->init(tileMapPos, shaderProgram);
+	}
+
+
 }
 
 // --
 void Lakitu::update(int deltaTime)
 {
 	movementy++;
+	countThrow++;
+	if (countThrow >= FREQUENCY)
+	{
+		countThrow = 0;
+		throwSpinny = true;
+	}
+
 	if (movementy >= 24) movementy = 0;
 	if (movementy <= 11)
 	{
-			posPlayer.y += movementy % 2;
+		posPlayer.y += (movementy % 3)%2;
 	}
 	else
 	{
-
-			posPlayer.y -= movementy % 2;
+		posPlayer.y -= (movementy % 3) % 2;
 	}
-
-	if (direction == MOVE_LEFT)
+	int frame = sprite->getCurrentKeyFrame();
+	if (hp > 0)
 	{
-		if (sprite->animation() != MOVE_LEFT)
-			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= 2;
+		if (direction == MOVE_LEFT)
+		{
+			if (throwSpinny)
+			{
+
+				if (sprite->animation() == THROW_RIGHT)
+				{
+					sprite->changeAnimation(THROW_LEFT);
+					sprite->setCurrentFrame(frame);
+				}
+				else if (sprite->animation() != THROW_LEFT)
+					sprite->changeAnimation(THROW_LEFT);
+
+				if (sprite->lastKeyFrame())
+					throwSpinny = false;
+			}
+			else if (sprite->animation() != MOVE_LEFT)
+				sprite->changeAnimation(MOVE_LEFT);
+			posPlayer.x -= 1;
+		}
+		else
+		{
+			if (throwSpinny)
+			{
+				if (sprite->animation() == THROW_LEFT)
+				{
+					sprite->changeAnimation(THROW_RIGHT);
+					sprite->setCurrentFrame(frame);
+				}
+				else if (sprite->animation() != THROW_RIGHT)
+					sprite->changeAnimation(THROW_RIGHT);
+				else if (sprite->lastKeyFrame())
+					throwSpinny = false;
+			}
+			else if (sprite->animation() != MOVE_RIGHT)
+				sprite->changeAnimation(MOVE_RIGHT);
+			posPlayer.x += 1;
+		}
 	}
 	else
 	{
-		if (sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
+		if (direction == MOVE_LEFT)
+			if (sprite->animation() != DIE_LEFT)
+				sprite->changeAnimation(DIE_LEFT);
+			else if (sprite->lastKeyFrame())
+				dead = true;
+		if (direction == MOVE_RIGHT)
+			if (sprite->animation() != DIE_RIGHT)
+				sprite->changeAnimation(DIE_RIGHT);
+			else if (sprite->lastKeyFrame())
+				dead = true;
 	}
 	sprite->update(deltaTime);
 	
-	if (posPlayer.x < 5)
+	if (posPlayer.x < MinX)
 		direction = MOVE_RIGHT;
-	else if (posPlayer.x > 100)
+	else if (posPlayer.x > MaxX)
 		direction = MOVE_LEFT;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
@@ -127,12 +185,26 @@ void Lakitu::render()
 void Lakitu::setTileMap(TileMap* tileMap)
 {
 	map = tileMap;
+	for (int i = 0; i < 5; i++)
+	{
+		spinny[i]->setTileMap(tileMap);
+	}
 }
 
 void Lakitu::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	for (int i = 0; i < 5; i++)
+	{
+		spinny[i]->setPosition(pos);
+	}
+}
+
+void Lakitu::setMaxMinX(const glm::vec2& pos)
+{
+	MinX = pos.x;
+	MaxX = pos.y;
 }
 
 int Lakitu::getPositionX()
@@ -160,3 +232,12 @@ void Lakitu::damage()
 	hp--;
 }
 
+int Lakitu::livingSpinny()
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (spinny[i]->isDead())
+			return i;
+	}
+	return -1;
+}
