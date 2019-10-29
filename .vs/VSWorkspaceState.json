@@ -3,12 +3,14 @@
     "",
     "\\2DGame",
     "\\2DGame\\02-Bubble",
+    "\\2DGame\\02-Bubble\\.vs",
+    "\\2DGame\\02-Bubble\\.vs\\02-Bubble",
+    "\\2DGame\\02-Bubble\\.vs\\02-Bubble\\v16",
     "\\2DGame\\02-Bubble\\02-Bubble",
-    "\\libs",
     "\\libs\\irrKlang-1.6.0",
     "\\libs\\irrKlang-1.6.0\\lib",
     "\\libs\\irrKlang-1.6.0\\lib\\Win32-visualStudio"
   ],
-  "SelectedNode": "\\.gitignore",
+  "SelectedNode": "\\2DGame\\02-Bubble\\02-Bubble.suo",
   "PreviewInSolutionExplorer": false
 }
