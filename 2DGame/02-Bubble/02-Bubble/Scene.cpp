@@ -405,6 +405,7 @@ void Scene::loadEnemies(int lvl)
 			hammerBros[i] = new HammerBros();
 			hammerBros[i]->init(glm::ivec2(CAMERA_X, CAMERA_Y), texProgram);
 			hammerBros[i]->setTileMap(map);
+			hammerBros[i]->setMode(1);
 		}
 		hammerBros[0]->setPosition(glm::vec2((38) * map->getTileSize(), 10 * map->getTileSize()));
 		hammerBros[1]->setPosition(glm::vec2((55) * map->getTileSize(), 10 * map->getTileSize()));
@@ -417,6 +418,7 @@ void Scene::loadEnemies(int lvl)
 		{
 			hammerBros[i]->revive();
 			hammerBros[i]->setTileMap(map);
+			hammerBros[i]->setMode(0);
 		}
 		hammerBros[0]->setPosition(glm::vec2((7) * map->getTileSize(), 5 * map->getTileSize()));
 		hammerBros[1]->setPosition(glm::vec2((8) * map->getTileSize(),  5* map->getTileSize()));

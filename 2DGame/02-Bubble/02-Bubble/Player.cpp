@@ -601,6 +601,8 @@ int Player::getPositionY()
 
 bool Player::dies(const glm::vec2& posEnemie, const glm::ivec2& sizeTile)
 {
+	//si esta agachado no le pueden dar cuando esta en frontal
+	if (frontal && sprite3->animation() == F_DOWN) return false;
 	//hago el tamaño de colision mas pequeño para que no se note tanto que tenemos pixeles vacios delante del sprite del player
 	int xEnemie1, xEnemie2, yEnemie1, yEnemie2;
 	xEnemie1 = posEnemie.x + 4;
