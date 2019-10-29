@@ -232,7 +232,12 @@ void Lakitu::damage()
 	hp--;
 }
 
-void Lakitu::activateSpinny(int number)
+int Lakitu::livingSpinny()
 {
-	spinny[number]->activate();
+	for (int i = 0; i < 5; i++)
+	{
+		if (spinny[i]->isDead())
+			return i;
+	}
+	return -1;
 }

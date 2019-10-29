@@ -22,8 +22,7 @@ void Spinny::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	bJumping = false;
 	hp = 3;
-	active = false;
-	dead = false;
+	dead = true;
 	direction = MOVE_LEFT;
 	spriteSize = glm::ivec2(18, 18);
 	spritesheet.loadFromFile("images/goombaTiles2.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -55,43 +54,44 @@ void Spinny::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 // --
 void Spinny::update(int deltaTime)
 {
+	if (!dead)
+	{
+		sprite->update(deltaTime);
+		if ((sprite->animation() == DIE) && sprite->lastKeyFrame())
+			dead = true;
+		if (hp > 0) {
+			posPlayer.y += FALL_STEP;
+			bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+			if (map->collisionMoveLeft(posPlayer, spriteSize))
+			{
+				direction = MOVE_RIGHT;
+			}
+			else if (map->collisionMoveRight(posPlayer, spriteSize))
+			{
+				direction = MOVE_LEFT;
+			}
 
-	sprite->update(deltaTime);
-	if ((sprite->animation() == DIE) && sprite->lastKeyFrame())
-		dead = true;
-	if (hp > 0) {
-		posPlayer.y += FALL_STEP;
-		bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
-		if (map->collisionMoveLeft(posPlayer, spriteSize))
-		{
-			direction = MOVE_RIGHT;
-		}
-		else if (map->collisionMoveRight(posPlayer, spriteSize))
-		{
-			direction = MOVE_LEFT;
-		}
-
-		if (direction == MOVE_LEFT)
-		{
-			if (sprite->animation() != MOVE_LEFT)
-				sprite->changeAnimation(MOVE_LEFT);
-			posPlayer.x -= 1;
+			if (direction == MOVE_LEFT)
+			{
+				if (sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
+				posPlayer.x -= 1;
+			}
+			else
+			{
+				if (sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
+				posPlayer.x += 1;
+			}
 		}
 		else
 		{
-			if (sprite->animation() != MOVE_RIGHT)
-				sprite->changeAnimation(MOVE_RIGHT);
-			posPlayer.x += 1;
+			if (sprite->animation() != DIE)
+				sprite->changeAnimation(DIE);
 		}
-	}
-	else
-	{
-		if (sprite->animation() != DIE)
-			sprite->changeAnimation(DIE);
-	}
 
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	}
 }
 
 void Spinny::render()
@@ -111,6 +111,7 @@ void Spinny::setTileMap(TileMap* tileMap)
 void Spinny::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
+	dead = false;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
@@ -139,8 +140,8 @@ void Spinny::damage()
 	hp--;
 }
 
-void Spinny::activate()
-{
-	active = true;
-}
 
+bool Spinny::isActive()
+{
+	return isDead;
+}

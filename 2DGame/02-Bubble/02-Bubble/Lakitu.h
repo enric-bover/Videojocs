@@ -30,8 +30,7 @@ public:
 	glm::vec2 getSpriteSize();
 
 private:
-	void Lakitu::activateSpinny(int number);
-
+	int livingSpinny();
 private:
 	bool bJumping;
 	bool throwSpinny;
