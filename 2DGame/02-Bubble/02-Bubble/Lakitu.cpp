@@ -79,6 +79,13 @@ void Lakitu::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram/*, 
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
+	for (int i = 0; i < 5; i++)
+	{
+		spinny[i] = new Spinny();
+		spinny[i]->init(tileMapPos, shaderProgram);
+	}
+
+
 }
 
 // --
@@ -178,12 +185,20 @@ void Lakitu::render()
 void Lakitu::setTileMap(TileMap* tileMap)
 {
 	map = tileMap;
+	for (int i = 0; i < 5; i++)
+	{
+		spinny[i]->setTileMap(tileMap);
+	}
 }
 
 void Lakitu::setPosition(const glm::vec2& pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	for (int i = 0; i < 5; i++)
+	{
+		spinny[i]->setPosition(pos);
+	}
 }
 
 void Lakitu::setMaxMinX(const glm::vec2& pos)
@@ -217,3 +232,7 @@ void Lakitu::damage()
 	hp--;
 }
 
+void Lakitu::activateSpinny(int number)
+{
+	spinny[number]->activate();
+}

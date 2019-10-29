@@ -24,11 +24,13 @@ public:
 	int getPositionY();
 	bool isDead();
 	void damage();
+	void activate();
 	glm::vec2 getSpriteSize();
 
 
 private:
 	bool bJumping;
+	bool active;
 	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
 	int jumpAngle, startY;
 	Texture spritesheet;

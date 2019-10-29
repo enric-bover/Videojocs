@@ -22,6 +22,7 @@ void Spinny::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	bJumping = false;
 	hp = 3;
+	active = false;
 	dead = false;
 	direction = MOVE_LEFT;
 	spriteSize = glm::ivec2(18, 18);
@@ -138,4 +139,8 @@ void Spinny::damage()
 	hp--;
 }
 
+void Spinny::activate()
+{
+	active = true;
+}
 

@@ -4,6 +4,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Spinny.h"
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -28,6 +29,8 @@ public:
 
 	glm::vec2 getSpriteSize();
 
+private:
+	void Lakitu::activateSpinny(int number);
 
 private:
 	bool bJumping;
@@ -36,6 +39,7 @@ private:
 	glm::ivec2 tileMapDispl, posPlayer, spriteSize;
 	int jumpAngle, startY;
 	int MinX, MaxX;
+	Spinny* spinny[5];
 	Texture spritesheet;
 	Texture spritesheet2;
 	Sprite* sprite;
