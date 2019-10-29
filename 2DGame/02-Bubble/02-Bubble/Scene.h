@@ -14,10 +14,13 @@
 #include "Koopa.h"
 #include "Lakitu.h"
 #include "block_interrogante.h"
-
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
+
+#include <irrKlang.h>
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib")
 
 class Scene
 {
@@ -63,6 +66,8 @@ private:
 	Explosion *explosion;
 
 	HammerBros* hammerBros[5];
+
+	ISoundEngine* engine;
 
 };
 

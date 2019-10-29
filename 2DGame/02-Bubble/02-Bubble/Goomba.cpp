@@ -20,6 +20,7 @@ enum GoombaAnimations
 
 void Goomba::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
+	engine = createIrrKlangDevice();
 	bJumping = false;
 	hp = 3;
 	dead = false;
@@ -86,7 +87,10 @@ void Goomba::update(int deltaTime)
 	else
 	{
 		if (sprite->animation() != DIE)
+		{
+			engine->play2D("music/goomba.mp3");
 			sprite->changeAnimation(DIE);
+		}
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -146,4 +150,9 @@ void Goomba::revive()
 
 glm::ivec2 Goomba::getPosition() {
 	return posPlayer;
+}
+
+void Goomba::kill()
+{
+	hp = 0;
 }

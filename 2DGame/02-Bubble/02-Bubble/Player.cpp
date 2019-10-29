@@ -7,7 +7,6 @@
 #include "Balas.h"
 
 
-
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
@@ -43,6 +42,7 @@ enum Shooting
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
+	engine = createIrrKlangDevice();
 	bJumping = false;
 	dead = false; 
 	right = true;
@@ -438,6 +438,8 @@ void Player::update(int deltaTime)
 		{
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
+				engine->setSoundVolume(0.5f);
+				engine->play2D("music/jump.mp3");
 				bJumping = true;
 				jumpAngle = 0;
 				startY = posPlayer.y;
@@ -636,6 +638,8 @@ void Player::shoot(const glm::vec2& pos, int angle)
 	bool up = false;
 	bool down = false;
 	if (canShoot >= FRAME_SHOOT){
+		engine->setSoundVolume(0.25f);
+		engine->play2D("music/gun.mp3");
 		glm::ivec2 velocitat = glm::vec2(0, 0);
 		if (angle == R)
 		{

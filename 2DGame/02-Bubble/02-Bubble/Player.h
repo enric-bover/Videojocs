@@ -5,6 +5,11 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Balas.h"
+
+#include <irrKlang.h>
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib")
+
 #define NUM_BALES 90
 
 
@@ -58,7 +63,7 @@ private:
 	bool runUp;
 	int round;
 	
-
+	ISoundEngine* engine;
 };
 
 

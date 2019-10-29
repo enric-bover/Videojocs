@@ -7,7 +7,7 @@
 
 #define NUM_BALES 20
 #define FALL_STEP 4
-#define FRAME_SHOOT 50
+#define FRAME_SHOOT 70
 
 enum HammerBrosAnims
 {
@@ -16,6 +16,7 @@ enum HammerBrosAnims
 
 void HammerBros::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
+	actionTimer = 0;
 	hp = 3;
 	dead = false;
 	frontal = false;
@@ -70,6 +71,7 @@ void HammerBros::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram
 void HammerBros::update(int deltaTime, glm::ivec2 posEnemy)
 {
 	sprite->update(deltaTime);
+	actionTimer += deltaTime;
 	if (canShoot < FRAME_SHOOT)
 		canShoot++;
 	if (actualHammer >= NUM_BALES - 5) actualHammer = 0;
@@ -77,6 +79,66 @@ void HammerBros::update(int deltaTime, glm::ivec2 posEnemy)
 		dead = true;
 	if (hp > 0) {
 		this->posPlayer.y += FALL_STEP;
+		bJumping = !map->collisionMoveDown(this->posPlayer, spriteSize, &(this->posPlayer.y));
+		if (actionTimer > 3000) // decide new action
+		{
+			actionTimer = 0;
+			float newAction = float(rand()) / float(RAND_MAX);
+			if (newAction < 0.3f)
+			{
+				if (posPlayer.x > posEnemy.x)
+				{
+					if (posPlayer.x - posEnemy.x < 120 && posPlayer.x - posEnemy.x > 20)
+						direction = ATTACK_LEFT;
+					else
+						direction = MOVE_LEFT;
+				}
+				else if (posPlayer.x < posEnemy.x)
+				{
+					if (posEnemy.x - posPlayer.x < 120 && posEnemy.x - posPlayer.x > 20)
+						direction = ATTACK_RIGHT;
+					else
+						direction = MOVE_RIGHT;
+				}
+			}
+			else if (newAction < 0.56)
+				direction = MOVE_LEFT;
+			else
+				direction = MOVE_RIGHT;
+		}
+		// execute action
+		if (map->collisionMoveLeft(this->posPlayer, spriteSize))
+			direction = MOVE_RIGHT;
+		else if (map->collisionMoveRight(this->posPlayer, spriteSize))
+			direction = MOVE_LEFT;
+
+		if (direction == MOVE_LEFT)
+		{
+			if (sprite->animation() != MOVE_LEFT)
+				sprite->changeAnimation(MOVE_LEFT);
+			this->posPlayer.x -= 1;
+		}
+		else if (direction == MOVE_RIGHT)
+		{
+			if (sprite->animation() != MOVE_RIGHT)
+				sprite->changeAnimation(MOVE_RIGHT);
+			this->posPlayer.x += 1;
+		}
+		else if (direction == ATTACK_LEFT)
+		{
+			if (sprite->animation() != ATTACK_LEFT)
+				sprite->changeAnimation(ATTACK_LEFT);
+			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
+		}
+		else if (direction == ATTACK_RIGHT)
+		{
+			if (sprite->animation() != ATTACK_RIGHT)
+				sprite->changeAnimation(ATTACK_RIGHT);
+			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
+		}
+	}
+
+		/*this->posPlayer.y += FALL_STEP;
 		bJumping = !map->collisionMoveDown(this->posPlayer, spriteSize, &(this->posPlayer.y));
 
 		if (map->collisionMoveLeft(this->posPlayer, spriteSize))
@@ -124,8 +186,7 @@ void HammerBros::update(int deltaTime, glm::ivec2 posEnemy)
 			if (sprite->animation() != ATTACK_RIGHT)
 				sprite->changeAnimation(ATTACK_RIGHT);
 			shoot(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)), posEnemy);
-		}
-	}
+		}*/
 	else
 	{
 		if ((direction == MOVE_LEFT || direction == ATTACK_LEFT) && sprite->animation() != DIE_LEFT)
@@ -175,7 +236,7 @@ void HammerBros::shoot(const glm::vec2& pos, glm::ivec2 posEnemy)
 		float x = posEnemy.x - posPlayer.x;
 		float y = posEnemy.y - posPlayer.y;
 		float mod = sqrt(x * x + y * y);
-		glm::vec2 velocitat = glm::vec2(x/mod, y/mod);
+		glm::vec2 velocitat = glm::vec2(1.3f*x/mod, 1.3f*y/mod);
 		bales[actualHammer]->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x + 16), float(tileMapDispl.y + posPlayer.y + 10)), velocitat);
 		canShoot = 0;
 		actualHammer += 1;
